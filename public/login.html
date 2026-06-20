@@ -12,43 +12,41 @@
   <script src="/js/config.js" defer></script>
   <script src="/js/login.js" defer></script>
 </head>
-<body class="bg-slate-950 font-sans antialiased h-screen w-screen flex items-center justify-center p-4 selection:bg-[#db7f0d]/30">
+<body class="bg-slate-50 font-sans antialiased h-screen w-screen flex items-center justify-center p-4">
 
-  <main class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 space-y-6">
+  <main class="w-full max-w-md bg-white border border-slate-200 rounded-2xl p-6 md:p-8 space-y-6 shadow-xl shadow-slate-200/50">
     
     <div class="text-center space-y-2">
       <img src="/assets/logo.png" alt="DPRM Logo" class="w-20 h-auto mx-auto mb-2" />
-      <h2 class="text-xl font-bold tracking-tight text-white">
+      <h2 class="text-xl font-bold tracking-tight text-slate-800">
         DPRM On<span class="text-[#d98a41] italic">e</span>Request
       </h2>
-      <p class="text-slate-500 text-xs font-medium tracking-wide uppercase">Admin Authentication Gateway</p>
+      <p class="text-slate-400 text-xs font-semibold tracking-wide uppercase">Admin Authentication Gateway</p>
     </div>
 
     <div class="space-y-4">
       <div class="w-full">
-        <input type="password" id="securityCode" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-center text-lg font-bold tracking-widest text-white placeholder:font-normal placeholder:tracking-normal focus:outline-none focus:border-[#db7f0d] transition-colors placeholder-slate-600" placeholder="••••••••" />
+        <input type="password" id="securityCode" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3.5 text-center text-lg font-bold tracking-widest text-slate-800 placeholder:font-normal placeholder:tracking-normal focus:outline-none focus:border-[#1d3557] focus:ring-2 focus:ring-[#1d3557]/10 transition-all placeholder-slate-400" placeholder="••••••••" />
       </div>
       
-      <button id="submitLoginBtn" class="w-full bg-[#1d3557] hover:bg-[#152757] text-white font-semibold py-3.5 px-4 rounded-xl transition-colors text-sm tracking-wider uppercase cursor-pointer" onclick="login()">
+      <button id="submitLoginBtn" class="w-full bg-[#1d3557] hover:bg-[#11223b] text-white font-semibold py-3.5 px-4 rounded-xl transition-all text-sm tracking-wider uppercase cursor-pointer shadow-md hover:shadow-lg" onclick="login()">
         LOGIN
       </button>
 
-      <div id="errorMessage" class="hidden text-red-400 bg-red-950/30 border border-red-900/50 rounded-xl p-3 text-xs font-medium text-center space-x-1">
+      <div id="errorMessage" class="hidden text-red-600 bg-red-50 border border-red-200 rounded-xl p-3 text-xs font-medium text-center space-x-1">
         <i class="fas fa-circle-exclamation"></i>
         <span>Access Denied: Invalid security credentials</span>
       </div>
     </div>
 
-    <div class="pt-4 border-t border-slate-800 text-center space-y-1 text-[11px] font-medium">
-      <p class="text-[#d98a41] italic">
+    <div class="pt-4 border-t border-slate-100 text-center space-y-1 text-[11px] font-medium">
+      <p class="text-[#1d3557] italic">
         Strictly Confidential: Access credentials must not be shared or distributed.
       </p>
-      <p class="text-slate-600">
+      <p class="text-slate-400">
         &copy; 2026 Developed by DPRM ICT DevTeam
       </p>
     </div>
-
   </main>
-
 </body>
 </html>
