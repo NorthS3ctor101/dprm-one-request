@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <title>Admin Portal Login | DPRM-OneRequest</title>
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="/js/config.js" defer></script>
+  <script src="/js/login.js" defer></script>
+</head>
+<body class="bg-slate-950 font-sans antialiased h-screen w-screen flex items-center justify-center p-4 selection:bg-[#db7f0d]/30">
+
+  <main class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 space-y-6">
+    
+    <div class="text-center space-y-2">
+      <img src="/assets/logo.png" alt="DPRM Logo" class="w-20 h-auto mx-auto mb-2" />
+      <h2 class="text-xl font-bold tracking-tight text-white">
+        DPRM On<span class="text-[#d98a41] italic">e</span>Request
+      </h2>
+      <p class="text-slate-500 text-xs font-medium tracking-wide uppercase">Admin Authentication Gateway</p>
+    </div>
+
+    <div class="space-y-4">
+      <div class="w-full">
+        <input type="password" id="securityCode" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-center text-lg font-bold tracking-widest text-white placeholder:font-normal placeholder:tracking-normal focus:outline-none focus:border-[#db7f0d] transition-colors placeholder-slate-600" placeholder="••••••••" />
+      </div>
+      
+      <button id="submitLoginBtn" class="w-full bg-[#1d3557] hover:bg-[#152757] text-white font-semibold py-3.5 px-4 rounded-xl transition-colors text-sm tracking-wider uppercase cursor-pointer" onclick="login()">
+        LOGIN
+      </button>
+
+      <div id="errorMessage" class="hidden text-red-400 bg-red-950/30 border border-red-900/50 rounded-xl p-3 text-xs font-medium text-center space-x-1">
+        <i class="fas fa-circle-exclamation"></i>
+        <span>Access Denied: Invalid security credentials</span>
+      </div>
+    </div>
+
+    <div class="pt-4 border-t border-slate-800 text-center space-y-1 text-[11px] font-medium">
+      <p class="text-[#d98a41] italic">
+        Strictly Confidential: Access credentials must not be shared or distributed.
+      </p>
+      <p class="text-slate-600">
+        &copy; 2026 Developed by DPRM ICT DevTeam
+      </p>
+    </div>
+
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <title>DPRM-OneRequest Tracker</title>
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="/js/config.js" defer></script>
+  <script src="/js/tracker.js" defer></script>
+</head>
+<body class="bg-slate-100 font-sans text-slate-700 antialiased h-screen w-screen flex flex-col overflow-hidden">
+
+  <div class="w-full flex-none p-4 pb-0 space-y-4">
+    <div id="permissionBanner" class="hidden bg-blue-50 border border-blue-200 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-center gap-3 shadow-sm mx-auto">
+      <div class="flex items-center gap-3 text-blue-900 text-sm">
+        <i class="fas fa-info-circle text-base text-blue-600"></i>
+        <span>Enable desktop permissions to receive background audio alerts and real-time push tracking updates for client requests.</span>
+      </div>
+      <button onclick="requestDesktopNotificationPermission()" class="bg-blue-700 hover:bg-blue-800 text-white font-semibold text-xs px-4 py-2 rounded-xl transition-colors whitespace-nowrap cursor-pointer">
+        Enable Notifications
+      </button>
+    </div>
+
+    <header class="bg-gradient-to-r from-[#0f1c3f] to-slate-800 text-white px-6 py-4 rounded-xl shadow-md flex flex-col md:flex-row justify-between items-center gap-4">
+      <img src="https://i.imgur.com/IM6VlDm.png" alt="Logo" class="w-52 h-auto" />
+      <div class="flex gap-2">
+        <button class="flex items-center gap-2 bg-white/10 hover:bg-white/15 text-white font-medium text-sm px-4 py-2.5 rounded-xl border border-white/10 transition-colors cursor-pointer" onclick="generateReport()">
+          <i class="fas fa-chart-line text-xs"></i> Report
+        </button>
+        <button class="flex items-center gap-2 bg-red-600/90 hover:bg-red-600 text-white font-medium text-sm px-4 py-2.5 rounded-xl border border-red-700/10 transition-colors cursor-pointer" onclick="logout()">
+          <i class="fas fa-sign-out-alt text-xs"></i> Logout
+        </button>
+      </div>
+    </header>
+
+    <div class="bg-white rounded-xl border border-slate-200/80 shadow-xs p-4 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+      <div class="flex items-center gap-2">
+        <span class="text-sm text-slate-400">Show</span>
+        <select id="rowsPerPage" class="border border-slate-200 rounded-lg px-2.5 py-1 text-sm bg-white focus:outline-none focus:border-bjmp-blue cursor-pointer">
+          <option value="10" selected>10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+        </select>
+        <span class="text-sm text-slate-400">entries</span>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+        <div class="flex items-center gap-2">
+          <label class="text-sm text-slate-400 text-nowrap" for="statusFilter">Filter Status:</label>
+          <select id="statusFilter" class="border border-slate-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none cursor-pointer">
+            <option value="ALL">All Status</option>
+            <option value="ON PROCESS" selected>On Process</option>
+            <option value="COMPLETED">Completed</option>
+          </select>
+        </div>
+        <input type="text" id="searchInput" class="border border-slate-200 rounded-lg px-4 py-1.5 text-sm w-full sm:w-64 focus:outline-none focus:ring-3 focus:ring-[#1d3557]/5" placeholder="Search by name or reference..." onkeyup="filterTable()" />
+      </div>
+    </div>
+  </div>
+
+  <main class="flex-grow w-full p-4 pt-2 pb-0 overflow-hidden flex flex-col min-h-0">
+    <main-panel class="block bg-white rounded-t-xl border border-b-0 border-slate-200/80 p-4 pb-2">
+      <div class="overflow-x-auto overflow-y-auto flex-grow max-h-[calc(100vh-200px)] -mx-4 border border-slate-100 rounded-xl bg-slate-50/20">
+        <table class="min-w-full divide-y divide-slate-200" id="requestsTable">
+          <thead class="bg-slate-50/95 backdrop-blur-xs sticky top-0 z-10 shadow-xs">
+            <tr class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-200">
+              <th class="px-6 py-4">Reference #</th>
+              <th class="px-6 py-4">Date & Time Requested</th>
+              <th class="px-6 py-4">Name of Personnel</th>
+              <th class="px-6 py-4">Region</th>
+              <th class="px-6 py-4">Requested Documents</th>
+              <th class="px-6 py-4">Purpose</th>
+              <th class="px-6 py-4">Processing Time</th>
+              <th class="px-6 py-4">Status</th>
+              <th class="px-6 py-4 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="requestBody" class="divide-y divide-slate-100 text-sm text-slate-600 font-normal bg-white">
+            <tr><td colspan="9" class="text-center text-slate-400 py-8">Please wait while real-time requests are loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main-panel>
+  </main>
+
+  <div class="w-full flex-none px-4 pb-4">
+    <div class="bg-white rounded-b-xl border border-t-0 border-slate-200/80 p-4 pt-2 flex flex-col sm:flex-row justify-between items-center gap-4 shadow-sm">
+      <div class="text-sm text-slate-500 font-medium">
+        Total Records: <span id="totalRequest" class="bg-slate-100 border border-slate-200 text-slate-700 px-2 py-0.5 rounded-md font-bold text-xs ml-1">0</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <button class="border border-slate-200 hover:bg-slate-50 text-slate-600 font-medium text-xs px-3 py-1.5 rounded-lg transition-colors cursor-pointer" onclick="previousPage()">Previous</button>
+        <div class="text-xs font-semibold text-slate-400">Page <span id="currentPage" class="text-slate-800">1</span> of <span id="totalPages" class="text-slate-800">1</span></div>
+        <button class="border border-slate-200 hover:bg-slate-50 text-slate-600 font-medium text-xs px-3 py-1.5 rounded-lg transition-colors cursor-pointer" onclick="nextPage()">Next</button>
+      </div>
+    </div>
+
+    <footer class="w-full bg-white border border-slate-200 rounded-xl py-4 text-center text-xs text-slate-400 shadow-inner mt-4">
+      <div class="w-full px-6 flex flex-col sm:flex-row justify-between items-center gap-2 font-medium">
+        <p>&copy; 2026 DPRM OneRequest. All rights reserved.</p>
+        <p class="text-slate-400/80">
+          Developed by <span class="text-[#1d3557] font-semibold">DPRM ICT DevTeam</span>
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <div id="viewDetailsModal" class="modal-container fixed inset-0 hidden overflow-y-auto z-50" role="dialog">
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div class="modal-backdrop fixed inset-0 bg-slate-900/40 backdrop-blur-xs"></div>
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl transform transition-all overflow-hidden relative z-50">
+        <div class="flex justify-between items-center px-6 py-4 border-b border-slate-100 bg-slate-50">
+          <h5 class="font-bold text-slate-900 text-base">Request Details</h5>
+          <button class="closeModal text-slate-400 hover:text-slate-600 text-xl font-light cursor-pointer">&times;</button>
+        </div>
+
+      <div id="loadingOverlay" class="hidden fixed inset-0 z-[100] bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-4 border-[#1d3557] border-t-transparent"></div>
+        <p class="text-sm text-slate-700 font-bold mt-4 animate-pulse">Retrieving record matrix details...</p>
+      </div>
+        
+        <div class="p-0 overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <tbody id="detailsTableBody" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="preparedByModal" class="modal-container fixed inset-0 hidden overflow-y-auto z-50" role="dialog">
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div class="modal-backdrop fixed inset-0 bg-slate-900/40 backdrop-blur-xs"></div>
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all overflow-hidden relative z-50">
+        <div class="flex justify-between items-center px-6 py-4 border-b border-slate-100 bg-slate-50">
+          <h5 class="font-bold text-slate-900 text-sm uppercase tracking-wider">Completion Authorization Routing</h5>
+          <button class="closeModal text-slate-400 hover:text-slate-600 text-xl font-light cursor-pointer">&times;</button>
+        </div>
+        <div class="p-6 space-y-4">
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-400 mb-1.5">Processed By</label>
+            <select id="preparedBySelect" class="w-full border border-slate-300 bg-white rounded-xl px-3 py-2 text-sm focus:outline-none cursor-pointer">
+              <option value="">-- Select Name --</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-400 mb-1.5">Remarks</label>
+            <textarea id="remarksInput" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none placeholder-slate-300" rows="3" placeholder="Enter processing remarks..."></textarea>
+          </div>
+        </div>
+        <div class="flex justify-between items-center px-6 py-4 bg-slate-50 border-t border-slate-100">
+          <small id="preparedByError" class="text-red-600 hidden font-semibold text-xs">Please allocate a workflow handler.</small>
+          <button id="preparedBySubmitBtn" type="button" class="bg-[#1d3557] hover:bg-[#0f1c3f] text-white font-semibold text-sm px-5 py-2 rounded-xl transition-colors ml-auto cursor-pointer" onclick="submitPreparedBy()">Confirm Completion</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="reportModal" class="modal-container fixed inset-0 hidden overflow-y-auto z-50" role="dialog">
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div class="modal-backdrop fixed inset-0 bg-slate-900/40 backdrop-blur-xs"></div>
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-6xl transform transition-all relative z-50 flex flex-col max-h-[85vh]">
+        <div class="flex justify-between items-center px-6 py-4 border-b border-slate-100 bg-slate-50">
+          <h5 class="font-bold text-slate-900">Accomplishment Report for <span id="reportYear" class="text-[#1d3557] font-black"></span></h5>
+          <button class="closeModal text-slate-400 hover:text-slate-600 text-xl font-light cursor-pointer">&times;</button>
+        </div>
+        <div class="p-6 overflow-y-auto space-y-4">
+          <div class="bg-slate-50 border border-slate-200/60 p-3 rounded-xl flex items-center gap-3">
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-0">Select Target Year:</label>
+            <input type="number" id="reportYearInput" class="border border-slate-300 rounded-lg px-3 py-1 text-sm bg-white focus:outline-none w-28 font-semibold text-slate-800" />
+            <button class="bg-[#1d3557] text-white font-semibold text-xs px-4 py-2 rounded-lg hover:bg-[#0f1c3f] cursor-pointer transition-colors" onclick="fetchReportData()">Generate</button>
+          </div>
+          <div class="overflow-x-auto border border-slate-200 rounded-xl bg-white shadow-inner">
+            <table class="min-w-full border-collapse text-center text-xs text-slate-600 align-middle" id="reportTable">
+              <thead class="bg-slate-900 text-white font-bold uppercase text-[10px] tracking-wider whitespace-nowrap">
+                <tr>
+                  <th class="px-4 py-3 text-left bg-slate-950">Name of Personnel</th>
+                  <th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>May</th><th>Jun</th>
+                  <th>Jul</th><th>Aug</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Dec</th>
+                  <th class="bg-[#1d3557] px-4">Total</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 font-medium"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fixed bottom-4 right-4 z-[9999]">
+    <div id="pendingToast" class="hidden bg-slate-900 text-white shadow-xl rounded-xl border border-slate-800 px-4 py-3.5 flex items-center gap-3 max-w-sm">
+      <div class="text-cyan-400"><i class="fas fa-bell"></i></div>
+      <div class="text-xs font-medium pr-4" id="toastMessage"></div>
+      <button class="text-slate-400 hover:text-white ml-auto text-sm font-bold cursor-pointer" onclick="document.getElementById('pendingToast').classList.add('hidden')">&times;</button>
+    </div>
+  </div>
+
+  <audio id="notificationSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+
+</body>
+</html>

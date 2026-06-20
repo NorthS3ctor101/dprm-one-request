@@ -1,0 +1,13 @@
+{
+  "name": "dprm-onerequest-app",
+  "version": "1.0.0",
+  "description": "Decoupled static tracking asset environment powered by Express and Tailwind",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^4.19.2"
+  }
+}

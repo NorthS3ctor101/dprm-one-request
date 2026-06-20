@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <base target="_top" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+
+    <title>DPRM-OneRequest | Client Portal</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link rel="stylesheet" href="/css/style.css" />
+    <script src="/js/config.js" defer></script>
+    <script src="/js/index.js" defer></script>
+  </head>
+  <body class="bg-slate-50 font-sans text-slate-700 antialiased min-h-screen flex flex-col">
+
+    <section class="bg-gradient-to-br from-[#0f1c3f] to-[#1d3557] text-white text-center px-4 pt-16 pb-32">
+      <div class="max-w-4xl mx-auto flex flex-col items-center">
+        <img src="/assets/logo.png" alt="DPRM Logo" class="h-32 w-auto mb-6 drop-shadow-md" />
+        <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-2">
+          DPRM On<span class="text-[#db7f0d] italic">e</span>Request
+        </h1>
+        <p class="text-lg md:text-xl text-slate-300 font-light max-w-2xl">Submit and track your document requests with ease and convenience.</p>
+      </div>
+    </section>
+
+    <main class="flex-grow">
+      <div class="bg-white max-w-2xl mx-auto -mt-20 mb-12 rounded-3xl shadow-xl border border-slate-200/60 p-8 md:p-12 text-center relative z-10">
+        <h2 class="text-2xl md:text-3xl font-bold text-[#0f1c3f] tracking-tight mb-3">How can we assist you?</h2>
+        <p class="text-slate-500 mb-8 max-w-md mx-auto">Choose an option below to manage your document requests.</p>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+          <button id="submitBtn" class="bg-[#1d3557] text-white hover:bg-[#0f1c3f] font-semibold text-lg py-4 px-6 rounded-xl shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 hover:shadow-lg cursor-pointer">Submit a New Request</button>
+          <button id="trackBtn" class="bg-emerald-600 text-white hover:bg-emerald-700 font-semibold text-lg py-4 px-6 rounded-xl shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 hover:shadow-lg cursor-pointer">Track My Request</button>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-left text-amber-900 text-sm leading-relaxed">
+          <strong>Note:</strong> If authorizing another person to claim the document, ensure you provide an <u>Authorization Letter</u> and a photocopy of your <u>Valid ID</u>.
+        </div>
+      </div>
+    </main>
+
+    <div id="submitModal" class="modal-container fixed inset-0 hidden overflow-y-auto z-50">
+      <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="modal-backdrop fixed inset-0"></div>
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden relative z-50 flex flex-col max-h-[90vh]">
+          <div class="flex justify-between items-center px-8 py-5 border-b border-slate-100 bg-slate-50">
+            <h5 class="text-lg font-bold text-slate-900">SUBMIT REQUEST</h5>
+            <button class="closeModal text-slate-400 hover:text-slate-600 text-2xl font-light cursor-pointer">&times;</button>
+          </div>
+          <div class="p-8 overflow-y-auto">
+            <form id="submitForm" class="space-y-6">
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-[#1d3557] mb-3">Type of Client</label>
+                <div class="space-y-2.5">
+                  <label class="flex items-center gap-3 text-slate-700 cursor-pointer"><input type="radio" name="typeOfClient" value="Active Personnel" required /> Active Personnel</label>
+                  <label class="flex items-center gap-3 text-slate-700 cursor-pointer"><input type="radio" name="typeOfClient" value="Retired/Separated Personnel" /> Retired/Separated Personnel</label>
+                  <label class="flex items-center gap-3 text-slate-700 cursor-pointer"><input type="radio" name="typeOfClient" value="Others" /> Others</label>
+                </div>
+              </div>
+              <hr class="border-slate-100" />
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-[#1d3557] mb-3">Requested Document(s)</label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <label class="flex items-center gap-3 text-slate-700 cursor-pointer"><input type="checkbox" name="requestedDocument" value="Certificate of Active Duty Status" id="doc1" /> Certificate of Active Duty Status</label>
+                  <label class="flex items-center gap-3 text-slate-700 cursor-pointer"><input type="checkbox" name="requestedDocument" value="Certificate of Appearance" id="doc2" /> Certificate of Appearance</label>
+                  <label class="flex items-center gap-3 text-slate-700 cursor-pointer"><input type="checkbox" name="requestedDocument" value="Certificate of Leave Balance" id="doc3" /> Certificate of Leave Balance</label>
+                  <label class="flex items-center gap-3 text-slate-700 cursor-pointer"><input type="checkbox" name="requestedDocument" value="Leave Records" id="doc4" /> Leave Records</label>
+                  <label class="flex items-center gap-3 text-slate-700 cursor-pointer"><input type="checkbox" name="requestedDocument" value="Appointment" id="doc5" /> Appointment</label>
+                  <label class="flex items-center gap-3 text-slate-700 cursor-pointer"><input type="checkbox" name="requestedDocument" value="Service Records" id="doc6" /> Service Records</label>
+                  <label class="flex items-center gap-3 text-slate-700 cursor-pointer"><input type="checkbox" name="requestedDocument" value="List of Awards" id="doc7" /> List of Awards</label>
+                  <label class="flex items-center gap-3 text-slate-700 cursor-pointer"><input type="checkbox" name="requestedDocument" value="Others" id="docOthers" /> Others</label>
+                </div>
+                <div id="tagsWrapper" class="mt-4 hidden space-y-2">
+                  <div class="flex gap-2">
+                    <input type="text" id="tagsInput" class="flex-1 border border-slate-300 rounded-xl px-4 py-2 text-sm focus:outline-none" placeholder="Type and click Add" />
+                    <button type="button" id="addTagBtn" class="bg-slate-100 hover:bg-slate-200 text-[#1d3557] font-semibold px-4 rounded-xl text-sm transition-colors cursor-pointer">Add</button>
+                  </div>
+                  <div id="tagsList" class="flex flex-wrap gap-1.5 pt-1"></div>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-[#1d3557] mb-2">Number of Copies</label>
+                  <input type="number" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none" name="numberCopies" value="1" min="1" max="5" required />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-[#1d3557] mb-2">Purpose</label>
+                  <input type="text" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none" name="purpose" placeholder="Enter purpose of request" required />
+                </div>
+              </div>
+              <hr class="border-slate-100" />
+              <div id="clientFullNameField" class="hidden">
+                <label class="block text-xs font-bold uppercase tracking-wider text-[#1d3557] mb-2">Client Full Name</label>
+                <input type="text" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none" name="clientFullName" id="clientFullName" />
+              </div>
+              <div id="rankFullNameField">
+                <label class="block text-xs font-bold uppercase tracking-wider text-[#1d3557] mb-2">Rank and Full Name of Personnel</label>
+                <input type="text" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none" name="rankFullName" id="rankFullName" />
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-[#1d3557] mb-2">Region</label>
+                  <select id="region" name="region" class="w-full border border-slate-300 bg-white rounded-xl px-4 py-2.5 text-sm focus:outline-none cursor-pointer" required>
+                    <option value="">Select Region</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-[#1d3557] mb-2">Jail Unit/Office</label>
+                  <select id="jailUnitOffice" name="jailUnitOffice" class="w-full border border-slate-300 bg-white rounded-xl px-4 py-2.5 text-sm focus:outline-none cursor-pointer" required>
+                    <option value="">Select Region first</option>
+                  </select>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-[#1d3557] mb-2">Date of First Appointment</label>
+                  <input type="date" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none" name="dateFirstAppointment" required />
+                </div>
+                <div id="retirementField">
+                  <label class="block text-xs font-bold uppercase tracking-wider text-[#1d3557] mb-2">Date of Retirement/Separation</label>
+                  <input type="date" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none" name="dateRetirementSeparation" />
+                </div>
+              </div>
+              <hr class="border-slate-100" />
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-[#1d3557] mb-2">Notes <span class="text-slate-400 font-normal lowercase italic">(optional)</span></label>
+                <input type="text" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none" name="notes" placeholder="Add notes, if any" />
+              </div>
+              <div id="loadingSpinner" class="hidden flex flex-col items-center justify-center py-4">
+                <div class="animate-spin rounded-full h-8 w-8 border-2 border-[#1d3557] border-t-transparent"></div>
+                <p class="mt-2 text-sm text-slate-500">Submitting your request...</p>
+              </div>
+              <button type="submit" id="requestSubmitBtn" class="w-full bg-[#1d3557] text-white hover:bg-[#0f1c3f] font-semibold py-3.5 rounded-xl shadow-md transition-colors cursor-pointer flex items-center justify-center gap-2">
+                <div id="requestBtnSpinner" class="hidden animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                <span id="requestBtnText">Submit Request</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="trackModal" class="modal-container fixed inset-0 hidden overflow-y-auto z-50" role="dialog">
+      <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="modal-backdrop fixed inset-0"></div>
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative z-50">
+          <div class="flex justify-between items-center mb-6">
+            <h5 class="text-lg font-bold text-slate-900">TRACK DOCUMENT STATUS</h5>
+            <button class="closeModal text-slate-400 hover:text-slate-600 text-2xl font-light cursor-pointer">&times;</button>
+          </div>
+          <form id="trackForm" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Enter your Reference Number</label>
+              <input type="text" class="w-full border border-slate-300 rounded-xl px-4 py-3 text-center text-xl font-bold tracking-widest text-emerald-600 uppercase placeholder-slate-300 focus:outline-none focus:border-emerald-500" name="trackingNumber" placeholder="XXX000" required />
+            </div>
+            <button type="submit" class="w-full bg-[#1d3557] text-white font-semibold py-3 rounded-xl shadow-md cursor-pointer hover:bg-[#0f1c3f] transition-colors">Track Status</button>
+          </form>
+          
+          <div id="trackResult" class="mt-6"></div>
+          
+          <button id="receivedBtn" class="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl shadow-md hidden transition-colors cursor-pointer">
+            MARK AS RECEIVED
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="trackingModal" class="modal-container fixed inset-0 hidden overflow-y-auto z-50" role="dialog">
+      <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="modal-backdrop fixed inset-0"></div>
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm text-center p-8 relative z-50">
+          <div class="w-16 h-16 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+          </div>
+          <h4 class="text-xl font-bold text-slate-900 mb-2">Request Submitted!</h4>
+          <p class="text-sm text-slate-500 mb-6 px-2">Take note of this number. You will use it to check your status updates.</p>
+          <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 mb-6">
+            <span class="text-xs font-bold tracking-wider text-slate-400 uppercase block mb-1">Reference Code</span>
+            <span id="trackingNumber" class="text-3xl font-black text-emerald-600 tracking-wider"></span>
+          </div>
+
+          <div class="mb-2">
+            <button id="ctaSurveyBtn" type="button" class="w-full flex items-center justify-center gap-2.5 bg-[#1d3557] hover:bg-[#11223b] text-white font-bold text-base py-3.5 px-6 rounded-xl shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer">
+              <i class="fas fa-pen text-xs text-slate-200"></i>
+              Take Satisfaction Survey
+            </button>
+            
+            <p class="text-xs font-semibold text-amber-600 bg-amber-50 border border-amber-100 rounded-lg py-2 px-3 mt-4 flex items-center justify-center gap-2">
+              <i class="fas fa-bolt text-xs animate-bounce"></i>
+               Your feedback helps us maintain high standards of public service. Please take a brief moment to complete our survey.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="feedbackModal" class="modal-container fixed inset-0 hidden overflow-y-auto z-50" role="dialog">
+      <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="modal-backdrop fixed inset-0"></div>
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl transform transition-all relative z-50 flex flex-col max-h-[90vh]">
+          <div class="flex justify-between items-center px-8 py-5 border-b border-slate-100 bg-slate-50">
+            <h5 class="text-lg font-bold text-slate-900">Citizen/Client Satisfaction Survey</h5>
+          </div>
+          
+          <div class="p-8 overflow-y-auto space-y-6">
+            <form id="surveyForm" class="space-y-6">
+              <div>
+                <h5 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-2 mb-4">Respondent's Profile (Profile ng tumugon)</h5>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Name (Pangalan)</label>
+                    <input type="text" name="name" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:outline-none" placeholder="Input your complete name" />
+                  </div>
+                  <div class="w-full max-w-[200px]">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Age (Edad)</label>
+                    <input type="number" name="age" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:outline-none" placeholder="Input age" required />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Gender (Kasarian)</label>
+                    <div class="flex gap-4">
+                      <label class="flex items-center gap-2 font-medium cursor-pointer"><input type="radio" name="gender" value="Male" class="w-4 h-4" required /> Male</label>
+                      <label class="flex items-center gap-2 font-medium cursor-pointer"><input type="radio" name="gender" value="Female" class="w-4 h-4" /> Female</label>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Civil Status (Katayuang Sibil)</label>
+                    <div class="grid grid-cols-2 gap-2 max-w-md">
+                      <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="civilStatus" value="Single" class="w-4 h-4" required /> Single</label>
+                      <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="civilStatus" value="Married" class="w-4 h-4" /> Married</label>
+                      <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="civilStatus" value="Divorsed/Annulled" class="w-4 h-4" /> Separated</label>
+                      <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="civilStatus" value="Widowed" class="w-4 h-4" /> Widowed</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h5 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-1 mt-6">Citizen's Charter</h5>
+                <p class="text-xs text-slate-400 fst-italic mb-4">The Citizen’s Charter is an official document that reflects the services of a government agency/office including its requirements, fees, and processing times among others.</p>
+                <div class="space-y-4">
+                  <div class="space-y-1.5">
+                    <label class="block text-sm font-medium text-slate-800">CC1. Which of the following best describes your awareness of a CC?</label>
+                    <div class="space-y-1 text-slate-600 text-sm">
+                      <label class="flex items-start gap-2.5"><input type="radio" name="cc1" value="I know what a CC is and I saw this office’s CC." class="w-4 h-4 mt-0.5" required /> I know what a CC is and I saw this office’s CC.</label>
+                      <label class="flex items-start gap-2.5"><input type="radio" name="cc1" value="I know what a CC is but I did NOT see this office’s CC." class="w-4 h-4 mt-0.5" /> I know what a CC is but I did NOT see this office’s CC.</label>
+                      <label class="flex items-start gap-2.5"><input type="radio" name="cc1" value="I learned of the CC only when I saw this office’s CC." class="w-4 h-4 mt-0.5" /> I learned of the CC only when I saw this office’s CC.</label>
+                      <label class="flex items-start gap-2.5"><input type="radio" name="cc1" value="I do not know what a CC is and I did not see one in this office." class="w-4 h-4 mt-0.5" /> I do not know what a CC is and I did not see one in this office.</label>
+                    </div>
+                  </div>
+                  <div class="space-y-1.5">
+                    <label class="block text-sm font-medium text-slate-800">CC2. If aware of CC, would you say that the CC of this office was...?</label>
+                    <div class="space-y-1 text-slate-600 text-sm">
+                      <label class="flex items-center gap-2.5"><input type="radio" name="cc2" value="Easy to see" class="w-4 h-4" required /> Easy to see</label>
+                      <label class="flex items-center gap-2.5"><input type="radio" name="cc2" value="Somewhat easy to see" class="w-4 h-4" /> Somewhat easy to see</label>
+                      <label class="flex items-center gap-2.5"><input type="radio" name="cc2" value="Difficult to see" class="w-4 h-4" /> Difficult to see</label>
+                      <label class="flex items-center gap-2.5"><input type="radio" name="cc2" value="Not visible at all" class="w-4 h-4" /> Not visible at all</label>
+                      <label class="flex items-center gap-2.5"><input type="radio" name="cc2" value="N/A" class="w-4 h-4" /> N/A</label>
+                    </div>
+                  </div>
+                  <div class="space-y-1.5">
+                    <label class="block text-sm font-medium text-slate-800">CC3. If aware of CC (answered code 1-3 in CC1), how much did the CC help you in your transaction?</label>
+                    <div class="space-y-1 text-slate-600 text-sm">
+                      <label class="flex items-center gap-2.5"><input type="radio" name="cc3" value="Helped very much" class="w-4 h-4" required /> Helped very much</label>
+                      <label class="flex items-center gap-2.5"><input type="radio" name="cc3" value="Somewhat helped" class="w-4 h-4" /> Somewhat helped</label>
+                      <label class="flex items-center gap-2.5"><input type="radio" name="cc3" value="Did not help" class="w-4 h-4" /> Did not help</label>
+                      <label class="flex items-center gap-2.5"><input type="radio" name="cc3" value="N/A" class="w-4 h-4" /> N/A</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h5 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-2 mt-6 mb-4">Service Perception Ratings</h5>
+                <p class="text-xs text-slate-400 mb-3">Please rate the following (1 - Strongly Disagree to 5 - Strongly Agree):</p>
+                
+                <div class="space-y-4">
+                  <div class="bg-slate-50 border border-slate-200/60 p-4 rounded-xl space-y-3">
+                    <label class="block text-sm font-semibold text-slate-950">SQD0. I am satisfied with the service that I availed.<br><span class="text-xs text-slate-400 font-normal italic">Nasiyahan ako sa aking natanggap sa napuntahan na tanggapan.</span></label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-sm text-slate-600">
+                      <label class="flex items-center gap-2"><input type="radio" name="q0" value="5" required /> 5 - Strongly Agree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q0" value="4" /> 4 - Agree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q0" value="3" /> 3 - Neither Agree nor Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q0" value="2" /> 2 - Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q0" value="1" /> 1 - Strongly Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q0" value="N/A" /> Not Applicable</label>
+                    </div>
+                  </div>
+
+                  <div class="bg-slate-50 border border-slate-200/60 p-4 rounded-xl space-y-3">
+                    <label class="block text-sm font-semibold text-slate-950">SQD1. I spent a reasonable amount of time for my transaction.<br><span class="text-xs text-slate-400 font-normal italic">Makatwiran ang oras na aking ginugol para sa pagproseso ng aking transaksyon.</span></label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-sm text-slate-600">
+                      <label class="flex items-center gap-2"><input type="radio" name="q1" value="5" required /> 5 - Strongly Agree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q1" value="4" /> 4 - Agree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q1" value="3" /> 3 - Neither Agree nor Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q1" value="2" /> 2 - Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q1" value="1" /> 1 - Strongly Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q1" value="N/A" /> Not Applicable</label>
+                    </div>
+                  </div>
+
+                  <div class="bg-slate-50 border border-slate-200/60 p-4 rounded-xl space-y-3">
+                    <label class="block text-sm font-semibold text-slate-950">SQD2. The office followed the transaction's requirements and steps based on the information provided.<br><span class="text-xs text-slate-400 font-normal italic">Ang opisina ay sumusunod sa mga kinakailangang dokumento at mga hakbang batay sa impormasyong ibinigay.</span></label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-sm text-slate-600">
+                      <label class="flex items-center gap-2"><input type="radio" name="q2" value="5" required /> 5 - Strongly Agree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q2" value="4" /> 4 - Agree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q2" value="3" /> 3 - Neither Agree nor Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q2" value="2" /> 2 - Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q2" value="1" /> 1 - Strongly Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q2" value="N/A" /> Not Applicable</label>
+                    </div>
+                  </div>
+
+                  <div class="bg-slate-50 border border-slate-200/60 p-4 rounded-xl space-y-3">
+                    <label class="block text-sm font-semibold text-slate-950">SQD3. The steps (including payment) I needed to do for my transaction were easy and simple.<br><span class="text-xs text-slate-400 font-normal italic">Ang mga hakbang sa pagproseso, kasama na ang pagbayad ay madali at simple lang.</span></label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-sm text-slate-600">
+                      <label class="flex items-center gap-2"><input type="radio" name="q3" value="5" required /> 5 - Strongly Agree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q3" value="4" /> 4 - Agree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q3" value="3" /> 3 - Neither Agree nor Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q3" value="2" /> 2 - Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q3" value="1" /> 1 - Strongly Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q3" value="N/A" /> Not Applicable</label>
+                    </div>
+                  </div>
+
+                  <div class="bg-slate-50 border border-slate-200/60 p-4 rounded-xl space-y-3">
+                    <label class="block text-sm font-semibold text-slate-950">SQD4. I easily found information about my transaction from the office's website.<br><span class="text-xs text-slate-400 font-normal italic">Mabilis at madali akong nakahanap ng impormasyong tungkol sa aking transaksyon mula sa opesina o website nito.</span></label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-sm text-slate-600">
+                      <label class="flex items-center gap-2"><input type="radio" name="q4" value="5" required /> 5 - Strongly Agree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q4" value="4" /> 4 - Agree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q4" value="3" /> 3 - Neither Agree nor Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q4" value="2" /> 2 - Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q4" value="1" /> 1 - Strongly Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q4" value="N/A" /> Not Applicable</label>
+                    </div>
+                  </div>
+
+                  <div class="bg-slate-50 border border-slate-200/60 p-4 rounded-xl space-y-3">
+                    <label class="block text-sm font-semibold text-slate-950">SQD5. I paid a reasonable amount of fees for my transaction.<br><span class="text-xs text-slate-400 font-normal italic">Nagbayad ako ng makatwirang halaga para sa aking transaksyon (Kung and serbisyo ay ibinigay ng libre, markahan ang N/A).</span></label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-sm text-slate-600">
+                      <label class="flex items-center gap-2"><input type="radio" name="q5" value="5" required /> 5 - Strongly Agree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q5" value="4" /> 4 - Agree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q5" value="3" /> 3 - Neither Agree nor Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q5" value="2" /> 2 - Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q5" value="1" /> 1 - Strongly Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q5" value="N/A" /> Not Applicable</label>
+                    </div>
+                  </div>
+
+                  <div class="bg-slate-50 border border-slate-200/60 p-4 rounded-xl space-y-3">
+                    <label class="block text-sm font-semibold text-slate-950">SQD6. I feel the office was fair to everyone, or "walang palakasan", during my transaction.<br><span class="text-xs text-slate-400 font-normal italic">(Pakiramdam ko ay patas ang opisina sa lahat, o "walang palakasan", sa aking transaksyon.)</span></label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-sm text-slate-600">
+                      <label class="flex items-center gap-2"><input type="radio" name="q6" value="5" required /> 5 - Strongly Agree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q6" value="4" /> 4 - Agree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q6" value="3" /> 3 - Neither Agree nor Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q6" value="2" /> 2 - Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q6" value="1" /> 1 - Strongly Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q6" value="N/A" /> Not Applicable</label>
+                    </div>
+                  </div>
+
+                  <div class="bg-slate-50 border border-slate-200/60 p-4 rounded-xl space-y-3">
+                    <label class="block text-sm font-semibold text-slate-950">SQD7. I was treated courteously by the staff.<br><span class="text-xs text-slate-400 font-normal italic">(Magalang akong trinato ng mga tauhan, at kung humingi ng tulong ay handang tumulong sa akin.)</span></label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-sm text-slate-600">
+                      <label class="flex items-center gap-2"><input type="radio" name="q7" value="5" required /> 5 - Strongly Agree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q7" value="4" /> 4 - Agree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q7" value="3" /> 3 - Neither Agree nor Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q7" value="2" /> 2 - Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q7" value="1" /> 1 - Strongly Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q7" value="N/A" /> Not Applicable</label>
+                    </div>
+                  </div>
+
+                  <div class="bg-slate-50 border border-slate-200/60 p-4 rounded-xl space-y-3">
+                    <label class="block text-sm font-semibold text-slate-950">SQD8. I got what I needed from the government office.<br><span class="text-xs text-slate-400 font-normal italic">(Nakuha ko ang kinakailangan ko mula sa tanggapan, o kung tinanggihan ay ipinaliwanag ng sapat.)</span></label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-sm text-slate-600">
+                      <label class="flex items-center gap-2"><input type="radio" name="q8" value="5" required /> 5 - Strongly Agree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q8" value="4" /> 4 - Agree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q8" value="3" /> 3 - Neither Agree nor Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q8" value="2" /> 2 - Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q8" value="1" /> 1 - Strongly Disagree</label>
+                      <label class="flex items-center gap-2"><input type="radio" name="q8" value="N/A" /> Not Applicable</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <hr class="border-slate-100" />
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Suggestions to improve our service (optional)</label>
+                <textarea name="suggestions" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:outline-none focus:border-bjmp-blue" rows="3" placeholder="Your feedback matters..."></textarea>
+              </div>
+              <p class="text-[11px] text-slate-400 leading-relaxed px-1">
+                <strong>Data Privacy Notice:</strong> The information shared here is completely confidential. The BJMP completely abides by the provisions of R.A. 10173 or the Data Privacy Act of 2012.
+              </p>
+              <button type="submit" id="surveySubmitBtn" class="w-full bg-[#1d3557] text-white font-semibold py-3.5 rounded-xl hover:bg-[#0f1c3f] transition-colors cursor-pointer shadow-md flex items-center justify-center gap-2">
+                <div id="surveyBtnSpinner" class="hidden animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                <span id="surveyBtnText">Submit Survey</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="successModal" class="modal-container fixed inset-0 hidden overflow-y-auto z-50" role="dialog">
+      <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="modal-backdrop fixed inset-0"></div>
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all text-center p-8 relative z-50">
+          <div class="w-14 h-14 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+          </div>
+          <h4 class="text-xl font-bold text-slate-900 mb-3">Successfully Submitted</h4>
+          <p class="text-sm text-slate-500 mb-6 leading-relaxed">Thank you for providing your feedback. Your input will help us improve our services and ensure more efficient document processing in the future.</p>
+          <button type="button" class="closeModal bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 px-6 rounded-xl transition-colors cursor-pointer">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="w-full bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400 mt-auto">
+      <div class="max-w-4xl mx-auto px-4 space-y-1">
+        <p>&copy; 2026 DPRM OneRequest. All Rights Reserved.</p>
+        <p class="font-medium text-slate-400/80">
+          Developed by <span class="text-[#1d3557] font-semibold">DPRM ICT DevTeam</span>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

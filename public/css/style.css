@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@theme {
+  --font-sans: 'Inter', sans-serif;
+  --color-bjmp-dark: #0f1c3f;
+  --color-bjmp-blue: #1d3557;
+  --color-bjmp-accent: #f26419;
+  --color-bjmp-bg: #f8fafc;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 40;
+}
+
+.modal-container {
+  z-index: 50;
+}
+
+.status-pill {
+  @apply inline-block px-3 py-1 text-xs font-bold rounded-full tracking-wide uppercase text-center whitespace-nowrap;
+}
+.status-completed { @apply bg-blue-100 text-blue-700; }
+.status-pending { @apply bg-orange-100 text-orange-700; }
+.status-ready { @apply bg-green-100 text-green-700; }
