@@ -241,55 +241,57 @@ function renderPage() {
 
 window.viewDetails = function(rowIndex) {
   const row = requestMap[rowIndex];
-  if (!row) {
-    console.error("No record found for ID:", rowIndex);
-    return;
-  }
+  if (!row) return;
   
   const overlay = document.getElementById("loadingOverlay");
   const tbody = document.getElementById("detailsTableBody");
 
   tbody.innerHTML = ""; 
+  
   overlay.classList.remove('hidden');
   openModal('viewDetailsModal');
 
-  fetch(`${API_URL}?action=getRequestDetails&trackingNumber=${encodeURIComponent(row.trackingNumber)}&requestedDocument=${encodeURIComponent(row.requestedDocuments || row.requestedDocument || '')}`)
-    .then(res => res.json())
-    .then(d => {
-      const targetRows = [
-        ["Reference Number", d.trackingNumber, "font-bold text-emerald-600 text-base"],
-        ["Date of Requested", d.dateAndTime || d.timestamp || d.dateRequested ? new Date(d.dateAndTime || d.timestamp || d.dateRequested).toLocaleString() : ""],
-        ["Type of Client", d.typeOfClient],
-        ["Requested Documents", d.requestedDocuments || d.requestedDocument, "font-semibold text-slate-900"],
-        ["Number of Copies", d.copies || d.numberCopies],
-        ["Purpose", d.purpose],
-        ["Client Name", d.nameOfPersonnel || d.clientFullName, "font-medium text-slate-900"],
-        ["Region Assignment", d.region],
-        ["Unit/Office", d.jailUnitOffice],
-        ["Date of First Appointment", d.dateFirstAppointment ? new Date(d.dateFirstAppointment).toLocaleDateString() : ""],
-        ["Date of Separation", d.dateRetirementSeparation ? new Date(d.dateRetirementSeparation).toLocaleDateString() : ""],
-        ["Client Notes", d.notes, "italic text-slate-400"],
-        ["Processor", d.preparedBy],
-        ["Completion Timestamp", d.dateAndTimeCompleted ? new Date(d.dateAndTimeCompleted).toLocaleString() : ""],
-        ["Processing Time", d.processingTime],
-        ["Processor Comments", d.remarks],
-        ["Status", d.status, "font-bold text-blue-700"]
-      ];
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      fetch(`${API_URL}?action=getRequestDetails&trackingNumber=${encodeURIComponent(row.trackingNumber)}&requestedDocument=${encodeURIComponent(row.requestedDocuments || row.requestedDocument || '')}`)
+        .then(res => res.json())
+        .then(d => {
+          const targetRows = [
+            ["Reference Number", d.trackingNumber, "font-bold text-emerald-600 text-base"],
+            ["Date of Requested", d.dateAndTime || d.timestamp || d.dateRequested ? new Date(d.dateAndTime || d.timestamp || d.dateRequested).toLocaleString() : ""],
+            ["Type of Client", d.typeOfClient],
+            ["Requested Documents", d.requestedDocuments || d.requestedDocument, "font-semibold text-slate-900"],
+            ["Number of Copies", d.copies || d.numberCopies],
+            ["Purpose", d.purpose],
+            ["Client Name", d.nameOfPersonnel || d.clientFullName, "font-medium text-slate-900"],
+            ["Region Assignment", d.region],
+            ["Unit/Office", d.jailUnitOffice],
+            ["Date of First Appointment", d.dateFirstAppointment ? new Date(d.dateFirstAppointment).toLocaleDateString() : ""],
+            ["Date of Separation", d.dateRetirementSeparation ? new Date(d.dateRetirementSeparation).toLocaleDateString() : ""],
+            ["Client Notes", d.notes, "italic text-slate-400"],
+            ["Processor", d.preparedBy],
+            ["Completion Timestamp", d.dateAndTimeCompleted ? new Date(d.dateAndTimeCompleted).toLocaleString() : ""],
+            ["Processing Time", d.processingTime],
+            ["Processor Comments", d.remarks],
+            ["Status", d.status, "font-bold text-blue-700"]
+          ];
 
-      tbody.innerHTML = targetRows.map(r => `
-        <tr class="hover:bg-slate-50/50">
-          <th class="w-1/3 bg-slate-50/80 font-semibold text-slate-400 text-xs uppercase tracking-wider text-right pr-4 py-3 border-r border-slate-100">${r[0]}</th>
-          <td class="px-5 py-3 ${r[2] || 'text-slate-700'}">${r[1] || '-'}</td>
-        </tr>
-      `).join("");
-      
-      overlay.classList.add('hidden');
-    })
-    .catch((err) => {
-      overlay.classList.add('hidden');
-      console.error("Error loading details:", err);
-      tbody.innerHTML = `<tr><td colspan="2" class="text-center text-red-500 py-6">Error loading details.</td></tr>`;
+          tbody.innerHTML = targetRows.map(r => `
+            <tr class="hover:bg-slate-50/50">
+              <th class="w-1/3 bg-slate-50/80 font-semibold text-slate-400 text-xs uppercase tracking-wider text-right pr-4 py-3 border-r border-slate-100">${r[0]}</th>
+              <td class="px-5 py-3 ${r[2] || 'text-slate-700'}">${r[1] || '-'}</td>
+            </tr>
+          `).join("");
+          
+          overlay.classList.add('hidden');
+        })
+        .catch((err) => {
+          overlay.classList.add('hidden');
+          console.error("Error:", err);
+          tbody.innerHTML = `<tr><td colspan="2" class="text-center text-red-500 py-6">Error loading details.</td></tr>`;
+        });
     });
+  });
 };
 
 window.markAsReleased = function(rowIndex) {
