@@ -8,6 +8,11 @@
   --color-bjmp-bg: #f8fafc;
 }
 
+body {
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+}
+
 .modal-backdrop {
   position: fixed;
   top: 0;
