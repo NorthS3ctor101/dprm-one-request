@@ -289,6 +289,7 @@ window.viewDetails = function(rowIndex) {
     });
   });
 };
+
 window.markAsReleased = function(rowIndex) {
   const row = requestMap[rowIndex];
   if (!row) return;
