@@ -46,7 +46,7 @@ function createRow(row) {
   let displayTime = rawDate ? new Date(rawDate).toLocaleString() : "-";
   
   let displayProcTime = (row.processingTime === "Invalid Start Time" || !row.processingTime) 
-                        ? "Pending" 
+                        ? "-" 
                         : row.processingTime;
 
   tr.innerHTML = `
