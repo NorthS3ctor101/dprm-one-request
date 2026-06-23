@@ -48,19 +48,24 @@ function login() {
   });
 }
 
-// Attach Event Listeners to DOM elements
 document.addEventListener('DOMContentLoaded', () => {
+  console.log("DOM fully loaded and parsed");
+
   const loginBtn = document.getElementById("submitLoginBtn");
   const inputField = document.getElementById("securityCode");
 
-  // Handle Button Click
-  if (loginBtn) {
-    loginBtn.addEventListener("click", login);
+  if (!loginBtn) {
+    console.error("CRITICAL: Could not find element with ID 'submitLoginBtn'. Check your HTML!");
+  } else {
+    console.log("Successfully found login button. Attaching listener...");
+    loginBtn.addEventListener("click", () => {
+      console.log("Button click detected!");
+      login();
+    });
   }
 
-  // Handle "Enter" Key press in input field
   if (inputField) {
-    inputField.addEventListener("keypress", function(event) {
+    inputField.addEventListener("keypress", (event) => {
       if (event.key === "Enter") {
         event.preventDefault();
         login();
