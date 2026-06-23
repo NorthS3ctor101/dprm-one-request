@@ -296,21 +296,30 @@ window.viewSurvey = function(rowIndex) {
   
   overlay.classList.remove('hidden');
   openModal('surveyModal');
-  tbody.innerHTML = "<tr><td colspan='2' class='text-center py-4'>Loading...</td></tr>";
 
   fetch(`${API_URL}?action=getSurveyByTracking&trackingNumber=${encodeURIComponent(row.trackingNumber)}`)
     .then(res => res.json())
     .then(d => {
       overlay.classList.add('hidden');
       if (!d.found) {
-        tbody.innerHTML = "<tr><td colspan='2' class='text-center py-4 text-slate-500 italic'>No survey submitted for this request.</td></tr>";
+        tbody.innerHTML = "<tr><td colspan='2' class='text-center py-4 text-slate-500 italic'>No survey submitted.</td></tr>";
       } else {
-        tbody.innerHTML = Object.entries(d.surveyData).map(([key, val]) => `
-          <tr class="hover:bg-slate-50">
+        // Build the HTML including the Requested Document
+        let html = `
+          <tr class="bg-blue-50 border-b border-blue-100">
+            <th class="px-4 py-3 text-right text-xs text-blue-800 uppercase font-bold">Document Requested</th>
+            <td class="px-4 py-3 text-sm font-semibold text-blue-900">${d.requestedDoc}</td>
+          </tr>
+        `;
+        
+        html += Object.entries(d.surveyData).map(([key, val]) => `
+          <tr class="hover:bg-slate-50 border-b border-slate-50">
             <th class="px-4 py-2 text-right text-xs text-slate-400 uppercase">${key}</th>
             <td class="px-4 py-2 text-sm text-slate-700">${val || '-'}</td>
           </tr>
         `).join("");
+        
+        tbody.innerHTML = html;
       }
     });
 };
