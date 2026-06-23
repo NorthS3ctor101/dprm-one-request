@@ -298,19 +298,21 @@ window.viewSurvey = function(rowIndex) {
 
   fetch(`${API_URL}?action=getSurveyByTracking&trackingNumber=${encodeURIComponent(row.trackingNumber)}`)
     .then(res => res.json())
-    .then(d => {
-      overlay.classList.add('hidden');
-      if (!d.found) {
-        tbody.innerHTML = "<tr><td colspan='2' class='text-center py-4 text-slate-500 italic'>No survey submitted for this request.</td></tr>";
-      } else {
-        let html = `
-          <tr class="bg-blue-50 border-b border-blue-100">
-            <th class="px-4 py-3 text-right text-xs text-blue-800 uppercase font-bold">Documents Requested</th>
-            <td class="px-4 py-3 text-sm font-semibold text-blue-900">${d.requestedDocsList}</td>
-          </tr>
-        `;
+     .then(d => {
+    overlay.classList.add('hidden');
+    if (!d.found) {
+      tbody.innerHTML = "<tr><td colspan='2' class='text-center py-4 text-slate-500 italic'>No survey submitted.</td></tr>";
+    } else {
+      // Safely get the document list
+      const docList = d.requestedDocsList || "Not specified";
+      
+      let html = `
+        <tr class="bg-blue-50 border-b border-blue-100">
+          <th class="px-4 py-3 text-right text-xs text-blue-800 uppercase font-bold">Documents Requested</th>
+          <td class="px-4 py-3 text-sm font-semibold text-blue-900">${docList}</td>
+        </tr>
+      `;
         
-        // Add the rest of the survey fields
         html += Object.entries(d.surveyData).map(([key, val]) => `
           <tr class="hover:bg-slate-50 border-b border-slate-50">
             <th class="px-4 py-2 text-right text-xs text-slate-400 uppercase">${key}</th>
