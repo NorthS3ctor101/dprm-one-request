@@ -80,23 +80,20 @@ function createRow(row) {
         ${row.status || 'PENDING'}
       </span>
     </td>
-    <td class="px-6 py-4 whitespace-nowrap text-center">
-      <div class="inline-flex gap-1.5">
-        <button class="text-cyan-600 hover:text-cyan-700 bg-cyan-50 hover:bg-cyan-100 border border-cyan-200/60 p-2 rounded-xl text-xs transition-all cursor-pointer" onclick="viewDetails(${row.index})" title="View Complete Mapping">
-          <span class="fas fa-eye"></span>
-        </button>
-        
-        <button class="text-green-600 hover:text-green-700 bg-green-50 hover:bg-green-100 border border-green-200/60 p-2 rounded-xl text-xs transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed" 
-                onclick="markAsReleased(${row.index})" 
-                title="Release Authorization" 
-                ${(currentStatus !== "ON PROCESS" && currentStatus !== "PENDING") ? 'disabled' : ''}>
-          <span class="fas fa-check"></span>
-        </button>
-      </div>
-    </td>
-  `;
-  return tr;
-}
+    tr.innerHTML = `
+        <td class="px-6 py-4 whitespace-nowrap text-center">
+          <div class="inline-flex gap-1.5">
+            <button class="view-btn text-cyan-600 bg-cyan-50 border p-2 rounded-xl" data-index="${row.index}">
+              <span class="fas fa-eye"></span>
+            </button>
+            <button class="release-btn text-green-600 bg-green-50 border p-2 rounded-xl" data-index="${row.index}" ${(currentStatus !== "ON PROCESS" && currentStatus !== "PENDING") ? 'disabled' : ''}>
+              <span class="fas fa-check"></span>
+            </button>
+          </div>
+        </td>
+      `;
+      return tr;
+    }
 
 function initializeData() {
   fetch(`${API_URL}?action=getRequestedDocuments`)
