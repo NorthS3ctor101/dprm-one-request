@@ -372,25 +372,34 @@ window.generateReport = function() {
 };
 
 window.fetchReportData = function() {
+  const btn = document.getElementById("generateReportBtn");
   const yr = document.getElementById("reportYearInput").value;
   const tbody = document.querySelector("#reportTable tbody");
-  tbody.innerHTML = `<tr><td colspan="14" class="text-center text-slate-400 py-6"><div class="animate-spin inline-block rounded-full h-4 w-4 border-2 border-slate-400 border-t-transparent mr-2 align-middle"></div>Compiling metric profiles...</td></tr>`;
+  
+  btn.disabled = true;
+  tbody.innerHTML = `<tr><td colspan="14" class="text-center text-slate-400 py-6">Compiling...</td></tr>`;
 
   fetch(`${API_URL}?action=getInchargeReportData&year=${yr}`)
     .then(res => res.json())
     .then(data => {
+      btn.disabled = false;
+      
       tbody.innerHTML = "";
       if (!data || data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="14" class="text-center py-6 text-slate-400">No annual production data found for the selected year.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="14" class="text-center py-6 text-slate-400">No data found.</td></tr>`;
       } else {
         data.forEach(r => {
           const tr = document.createElement("tr");
           tr.className = "hover:bg-slate-50 transition-colors font-medium";
-          tr.innerHTML = `<td class="px-4 py-3 text-left font-semibold text-slate-900 bg-slate-50/50 border-r border-slate-100">${r.name}</td>${r.months.map(m => `<td>${m}</td>`).join("")}<td class="font-bold text-blue-700 bg-blue-50/40 border-l border-slate-100">${r.total}</td>`;
+          tr.innerHTML = `<td class="px-4 py-3 text-left font-semibold text-slate-900">${r.name}</td>${r.months.map(m => `<td>${m}</td>`).join("")}<td class="font-bold text-blue-700">${r.total}</td>`;
           tbody.appendChild(tr);
         });
       }
       document.getElementById("reportYear").textContent = yr;
+    })
+    .catch(err => {
+      btn.disabled = false;
+      console.error(err);
     });
 };
 
