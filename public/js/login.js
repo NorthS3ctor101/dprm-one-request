@@ -1,17 +1,3 @@
-function showNotification(msg) {
-  const toast = document.getElementById('toastMessage');
-  const toastContainer = document.getElementById('pendingToast');
-  
-  if (toast && toastContainer) {
-    toast.textContent = msg;
-    toastContainer.classList.remove('hidden');
-    // Auto-hide after 4 seconds
-    setTimeout(() => toastContainer.classList.add('hidden'), 4000);
-  } else {
-    alert(msg);
-  }
-}
-
 function showInlineError(msg) {
   const errDiv = document.getElementById('errorMessage');
   const errText = document.getElementById('errorMessageText');
@@ -33,7 +19,7 @@ function login() {
   const originalText = loginBtn.innerHTML;
 
   if (!code) {
-    showNotification("Security code is required to proceed.");
+    showInlineError("Access code is required to proceed.");
     return;
   }
 
