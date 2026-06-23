@@ -350,7 +350,6 @@ window.filterTable = function() {
     const matchesSearch = (r.trackingNumber?.toLowerCase().includes(i) || 
                           r.nameOfPersonnel?.toLowerCase().includes(i));
     
-    // If filter is ALL, return everything. Otherwise, match the specific status.
     const matchesStatus = (filter === "ALL" || status === filter);
     
     return matchesSearch && matchesStatus;
@@ -409,11 +408,27 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById("preparedBySubmitBtn").addEventListener("click", submitPreparedBy);
 
   document.getElementById("requestsTable").addEventListener("click", (e) => {
-    const viewBtn = e.target.closest(".view-btn");
-    const relBtn = e.target.closest(".release-btn");
-    if (viewBtn) viewDetails(viewBtn.dataset.index);
-    if (relBtn) markAsReleased(relBtn.dataset.index);
-  });
+  const viewBtn = e.target.closest(".view-btn");
+  const relBtn = e.target.closest(".release-btn");
+  
+  if (viewBtn) {
+    viewDetails(viewBtn.dataset.index);
+  }
+  
+  if (relBtn) {
+    const originalContent = relBtn.innerHTML;
+    
+    relBtn.disabled = true;
+    relBtn.innerHTML = `<span class="animate-spin fas fa-spinner"></span>`;
+    
+    markAsReleased(relBtn.dataset.index);
+  
+    setTimeout(() => {
+      relBtn.disabled = false;
+      relBtn.innerHTML = originalContent;
+    }, 1000); 
+  }
+});
 
   document.getElementById("statusFilter").addEventListener("change", () => { currentPage = 1; filterTable(); });
   document.getElementById("rowsPerPage").addEventListener("change", function() { rowsPerPage = parseInt(this.value, 10); currentPage = 1; filterTable(); });
