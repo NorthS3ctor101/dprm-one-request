@@ -225,6 +225,7 @@ window.viewDetails = function(rowIndex) {
     if (!isoDate || isoDate === "" || isoDate === "null" || isoDate === "undefined") return "-";
     const d = new Date(isoDate);
     return isNaN(d.getTime()) ? "-" : d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+  };
 
   const overlay = document.getElementById("loadingOverlay");
   const tbody = document.getElementById("detailsTableBody");
