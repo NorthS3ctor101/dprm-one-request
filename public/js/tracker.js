@@ -435,9 +435,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-    document.getElementById("closeToastBtn").addEventListener("click", () => {
-    document.getElementById('pendingToast').classList.add('hidden');
-  });
+   const closeToastBtn = document.getElementById("closeToastBtn");
+  if (closeToastBtn) {
+    closeToastBtn.addEventListener("click", () => {
+      document.getElementById('pendingToast').classList.add('hidden');
+    });
+  }
 
   document.getElementById("statusFilter").addEventListener("change", () => { currentPage = 1; filterTable(); });
   document.getElementById("rowsPerPage").addEventListener("change", function() { rowsPerPage = parseInt(this.value, 10); currentPage = 1; filterTable(); });
