@@ -520,23 +520,22 @@ document.addEventListener('DOMContentLoaded', () => {
   addListener("searchInput", "input", filterTable);
   addListener("statusFilter", "change", () => { currentPage = 1; filterTable(); });
   addListener("rowsPerPage", "change", function() { rowsPerPage = parseInt(this.value, 10); currentPage = 1; filterTable(); });
-
-addListener('chatToggleBtn', 'click', () => {
+  
+  addListener('chatToggleBtn', 'click', () => {
     const modal = document.getElementById('chatModal');
     const badge = document.getElementById('chatBadge');
+    
     modal.classList.remove('hidden');
-    isChatOpen = true;
+    isChatOpen = true; 
     badge.classList.add('hidden');
     chatUnreadCount = 0;
     loadMessages();
   });
 
   addListener('minimizeChatBtn', 'click', () => {
-    const container = document.getElementById('chatContentContainer');
-    const icon = document.querySelector('#minimizeChatBtn i');
-    container.classList.toggle('hidden');
-    icon.classList.toggle('fa-minus');
-    icon.classList.toggle('fa-plus');
+    const modal = document.getElementById('chatModal');
+    modal.classList.add('hidden');
+    isChatOpen = false; 
   });
 
   addListener('sendChatBtn', 'click', () => {
