@@ -19,6 +19,7 @@
   </head>
 
   <body class="bg-slate-50 font-sans text-slate-700 antialiased min-h-screen flex flex-col">
+   
     <section class="bg-gradient-to-br from-[#0f1c3f] to-[#1d3557] text-white text-center px-4 pt-16 pb-32">
       <div class="max-w-4xl mx-auto flex flex-col items-center">
         <img src="/assets/logo.png" alt="DPRM Logo" class="h-32 w-auto mb-6 drop-shadow-md" />
@@ -33,12 +34,10 @@
       <div class="bg-white max-w-2xl mx-auto -mt-20 mb-12 rounded-3xl shadow-xl border border-slate-200/60 p-8 md:p-12 text-center relative z-10">
         <h2 class="text-2xl md:text-3xl font-bold text-[#0f1c3f] tracking-tight mb-3">How can we assist you?</h2>
         <p class="text-slate-500 mb-8 max-w-md mx-auto">Choose an option below to manage your document requests.</p>
-
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
           <button id="submitBtn" class="bg-[#1d3557] text-white hover:bg-[#0f1c3f] font-semibold text-lg py-4 px-6 rounded-xl shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 hover:shadow-lg cursor-pointer">Submit a New Request</button>
           <button id="trackBtn" class="bg-emerald-600 text-white hover:bg-emerald-700 font-semibold text-lg py-4 px-6 rounded-xl shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 hover:shadow-lg cursor-pointer">Track My Request</button>
         </div>
-
         <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-left text-amber-900 text-sm leading-relaxed">
           <strong>Note:</strong> If authorizing another person to claim the document, ensure you provide an <u>Authorization Letter</u> and a photocopy of your <u>Valid ID</u>.
         </div>
@@ -63,10 +62,8 @@
                   <label class="flex items-center gap-3 text-slate-700 cursor-pointer"><input type="radio" name="typeOfClient" value="Retired/Separated Personnel" /> Retired/Separated Personnel</label>
                   <label class="flex items-center gap-3 text-slate-700 cursor-pointer"><input type="radio" name="typeOfClient" value="Others" /> Others</label>
                 </div>
-              </div>
-              
-              <hr class="border-slate-100" />
-              
+              </div>              
+              <hr class="border-slate-100" />              
               <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-[#1d3557] mb-3">Requested Document(s)</label>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -79,7 +76,6 @@
                   <label class="flex items-center gap-3 text-slate-700 cursor-pointer"><input type="checkbox" name="requestedDocument" value="List of Awards" id="doc7" /> List of Awards</label>
                   <label class="flex items-center gap-3 text-slate-700 cursor-pointer"><input type="checkbox" name="requestedDocument" value="Others" id="docOthers" /> Others</label>
                 </div>
-
                 <div id="tagsWrapper" class="mt-4 hidden space-y-2">
                   <div class="flex gap-2">
                     <input type="text" id="tagsInput" class="flex-1 border border-slate-300 rounded-xl px-4 py-2 text-sm focus:outline-none" placeholder="Type and click Add" />
@@ -88,7 +84,6 @@
                   <div id="tagsList" class="flex flex-wrap gap-1.5 pt-1"></div>
                 </div>
               </div>
-
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-xs font-bold uppercase tracking-wider text-[#1d3557] mb-2">Number of Copies</label>
@@ -99,19 +94,15 @@
                   <input type="text" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none" name="purpose" placeholder="Enter purpose of request" required />
                 </div>
               </div>
-
-              <hr class="border-slate-100" />
-              
+              <hr class="border-slate-100" />            
               <div id="clientFullNameField" class="hidden">
                 <label class="block text-xs font-bold uppercase tracking-wider text-[#1d3557] mb-2">Client Full Name</label>
                 <input type="text" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none" name="clientFullName" id="clientFullName" />
               </div>
-
               <div id="rankFullNameField">
                 <label class="block text-xs font-bold uppercase tracking-wider text-[#1d3557] mb-2">Rank and Full Name of Personnel</label>
                 <input type="text" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none" name="rankFullName" id="rankFullName" />
               </div>
-
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-xs font-bold uppercase tracking-wider text-[#1d3557] mb-2">Region</label>
@@ -120,38 +111,31 @@
                   </select>
                 </div>
                 <div>
-
                   <label class="block text-xs font-bold uppercase tracking-wider text-[#1d3557] mb-2">Jail Unit/Office</label>
                   <select id="jailUnitOffice" name="jailUnitOffice" class="w-full border border-slate-300 bg-white rounded-xl px-4 py-2.5 text-sm focus:outline-none cursor-pointer" required>
                     <option value="">Select Region first</option>
                   </select>
                 </div>
               </div>
-
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-xs font-bold uppercase tracking-wider text-[#1d3557] mb-2">Date of First Appointment</label>
                   <input type="date" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none" name="dateFirstAppointment" required />
-                </div>
-                
+                </div>   
                 <div id="retirementField">
                   <label class="block text-xs font-bold uppercase tracking-wider text-[#1d3557] mb-2">Date of Retirement/Separation</label>
                   <input type="date" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none" name="dateRetirementSeparation" />
                 </div>
-
               </div>
               <hr class="border-slate-100" />
-              
               <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-[#1d3557] mb-2">Notes <span class="text-slate-400 font-normal lowercase italic">(optional)</span></label>
                 <input type="text" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none" name="notes" placeholder="Add notes, if any" />
               </div>
-
               <div id="loadingSpinner" class="hidden flex flex-col items-center justify-center py-4">
                 <div class="animate-spin rounded-full h-8 w-8 border-2 border-[#1d3557] border-t-transparent"></div>
                 <p class="mt-2 text-sm text-slate-500">Submitting your request...</p>
               </div>
-
               <button type="submit" id="requestSubmitBtn" class="w-full bg-[#1d3557] text-white hover:bg-[#0f1c3f] font-semibold py-3.5 rounded-xl shadow-md transition-colors cursor-pointer flex items-center justify-center gap-2">
                 <div id="requestBtnSpinner" class="hidden animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
                 <span id="requestBtnText">Submit Request</span>
@@ -169,8 +153,7 @@
           <div class="flex justify-between items-center mb-6">
             <h5 class="text-lg font-bold text-slate-900">TRACK DOCUMENT STATUS</h5>
             <button class="closeModal text-slate-400 hover:text-slate-600 text-2xl font-light cursor-pointer">&times;</button>
-          </div>
-          
+          </div>      
           <form id="trackForm" class="space-y-4">
             <div>
               <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Enter your Reference Number</label>
@@ -178,7 +161,6 @@
             </div>
             <button type="submit" class="w-full bg-[#1d3557] text-white font-semibold py-3 rounded-xl shadow-md cursor-pointer hover:bg-[#0f1c3f] transition-colors">Track Status</button>
           </form>    
-
           <div id="trackResult" class="mt-6"></div>
           <button id="receivedBtn" class="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl shadow-md hidden transition-colors cursor-pointer">
             MARK AS RECEIVED
@@ -187,232 +169,117 @@
       </div>
     </div>
 
-
-
     <div id="trackingModal" class="modal-container fixed inset-0 hidden overflow-y-auto z-50" role="dialog">
-
       <div class="flex items-center justify-center min-h-screen p-4">
-
         <div class="modal-backdrop fixed inset-0"></div>
-
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm text-center p-8 relative z-50">
-
           <div class="w-16 h-16 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-
             <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
-
           </div>
-
           <h4 class="text-xl font-bold text-slate-900 mb-2">Request Submitted!</h4>
-
           <p class="text-sm text-slate-500 mb-6 px-2">Take note of this number. You will use it to check your status updates.</p>
-
           <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 mb-6">
-
             <span class="text-xs font-bold tracking-wider text-slate-400 uppercase block mb-1">Reference Code</span>
-
             <span id="trackingNumber" class="text-3xl font-black text-emerald-600 tracking-wider"></span>
-
           </div>
-
-
-
           <div class="my-8 p-6 bg-amber-500/10 border-2 border-dashed border-amber-500 rounded-2xl animate-pulse">
-
             <div class="flex flex-col items-center text-center space-y-4">
-
               <div class="p-3 bg-amber-500 rounded-full text-white shadow-lg">
-
                 <i class="fas fa-star text-xl"></i>
-
               </div>
-
-              
 
               <div class="space-y-1">
-
                 <h3 class="text-lg font-black text-amber-600 uppercase tracking-widest">Feedback Required</h3>
-
                 <p class="text-sm text-slate-800 font-medium">Kindly take the satisfaction survey to complete your request.</p>
-
               </div>
-
-          
-
               <button id="ctaSurveyBtn" type="button" class="w-full bg-[#1d3557] hover:bg-black text-white font-black text-lg py-4 px-6 rounded-xl shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer border-b-4 border-[#0f1c3f]">
-
                 <i class="fas fa-external-link-alt mr-2"></i> TAKE SATISFACTION SURVEY
-
               </button>
-
             </div>
-
-          </div>
-
-          
-
+          </div>   
         </div>
-
       </div>
-
     </div>
 
-
-
     <div id="feedbackModal" class="modal-container fixed inset-0 hidden overflow-y-auto z-50" role="dialog">
-
       <div class="flex items-center justify-center min-h-screen p-4">
-
         <div class="modal-backdrop fixed inset-0"></div>
-
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl transform transition-all relative z-50 flex flex-col max-h-[90vh]">
-
           <div class="flex justify-between items-center px-8 py-5 border-b border-slate-100 bg-slate-50">
-
             <h5 class="text-lg font-bold text-slate-900">Citizen/Client Satisfaction Survey</h5>
-
           </div>
-
-          
-
           <div class="p-8 overflow-y-auto space-y-6">
-
             <form id="surveyForm" class="space-y-6">
-
               <div>
-
                 <h5 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-2 mb-4">Respondent's Profile (Profile ng tumugon)</h5>
-
                 <div class="space-y-4">
-
                   <div>
-
                     <label class="block text-sm font-medium text-slate-700 mb-1">Name (Pangalan)</label>
-
                     <input type="text" name="name" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:outline-none" placeholder="Input your complete name" />
-
                   </div>
-
                   <div class="w-full max-w-[200px]">
-
                     <label class="block text-sm font-medium text-slate-700 mb-1">Age (Edad)</label>
-
                     <input type="number" name="age" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:outline-none" placeholder="Input age" required />
-
                   </div>
-
                   <div>
-
                     <label class="block text-sm font-medium text-slate-700 mb-2">Gender (Kasarian)</label>
-
                     <div class="flex gap-4">
-
                       <label class="flex items-center gap-2 font-medium cursor-pointer"><input type="radio" name="gender" value="Male" class="w-4 h-4" required /> Male</label>
-
                       <label class="flex items-center gap-2 font-medium cursor-pointer"><input type="radio" name="gender" value="Female" class="w-4 h-4" /> Female</label>
-
                     </div>
-
                   </div>
-
                   <div>
-
                     <label class="block text-sm font-medium text-slate-700 mb-2">Civil Status (Katayuang Sibil)</label>
-
                     <div class="grid grid-cols-2 gap-2 max-w-md">
-
                       <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="civilStatus" value="Single" class="w-4 h-4" required /> Single</label>
-
                       <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="civilStatus" value="Married" class="w-4 h-4" /> Married</label>
-
                       <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="civilStatus" value="Divorsed/Annulled" class="w-4 h-4" /> Separated</label>
-
                       <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="civilStatus" value="Widowed" class="w-4 h-4" /> Widowed</label>
-
                     </div>
-
                   </div>
-
                 </div>
-
               </div>
-
-
 
               <div>
-
                 <h5 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-1 mt-6">Citizen's Charter</h5>
-
                 <p class="text-xs text-slate-400 fst-italic mb-4">The Citizen’s Charter is an official document that reflects the services of a government agency/office including its requirements, fees, and processing times among others.</p>
-
                 <div class="space-y-4">
-
                   <div class="space-y-1.5">
-
                     <label class="block text-sm font-medium text-slate-800">CC1. Which of the following best describes your awareness of a CC?</label>
-
                     <div class="space-y-1 text-slate-600 text-sm">
-
                       <label class="flex items-start gap-2.5"><input type="radio" name="cc1" value="I know what a CC is and I saw this office’s CC." class="w-4 h-4 mt-0.5" required /> I know what a CC is and I saw this office’s CC.</label>
-
                       <label class="flex items-start gap-2.5"><input type="radio" name="cc1" value="I know what a CC is but I did NOT see this office’s CC." class="w-4 h-4 mt-0.5" /> I know what a CC is but I did NOT see this office’s CC.</label>
-
                       <label class="flex items-start gap-2.5"><input type="radio" name="cc1" value="I learned of the CC only when I saw this office’s CC." class="w-4 h-4 mt-0.5" /> I learned of the CC only when I saw this office’s CC.</label>
-
                       <label class="flex items-start gap-2.5"><input type="radio" name="cc1" value="I do not know what a CC is and I did not see one in this office." class="w-4 h-4 mt-0.5" /> I do not know what a CC is and I did not see one in this office.</label>
-
                     </div>
-
                   </div>
 
                   <div class="space-y-1.5">
-
                     <label class="block text-sm font-medium text-slate-800">CC2. If aware of CC, would you say that the CC of this office was...?</label>
-
                     <div class="space-y-1 text-slate-600 text-sm">
-
                       <label class="flex items-center gap-2.5"><input type="radio" name="cc2" value="Easy to see" class="w-4 h-4" required /> Easy to see</label>
-
                       <label class="flex items-center gap-2.5"><input type="radio" name="cc2" value="Somewhat easy to see" class="w-4 h-4" /> Somewhat easy to see</label>
-
                       <label class="flex items-center gap-2.5"><input type="radio" name="cc2" value="Difficult to see" class="w-4 h-4" /> Difficult to see</label>
-
                       <label class="flex items-center gap-2.5"><input type="radio" name="cc2" value="Not visible at all" class="w-4 h-4" /> Not visible at all</label>
-
                       <label class="flex items-center gap-2.5"><input type="radio" name="cc2" value="N/A" class="w-4 h-4" /> N/A</label>
-
                     </div>
-
                   </div>
-
+                  
                   <div class="space-y-1.5">
-
                     <label class="block text-sm font-medium text-slate-800">CC3. If aware of CC (answered code 1-3 in CC1), how much did the CC help you in your transaction?</label>
-
                     <div class="space-y-1 text-slate-600 text-sm">
-
                       <label class="flex items-center gap-2.5"><input type="radio" name="cc3" value="Helped very much" class="w-4 h-4" required /> Helped very much</label>
-
                       <label class="flex items-center gap-2.5"><input type="radio" name="cc3" value="Somewhat helped" class="w-4 h-4" /> Somewhat helped</label>
-
                       <label class="flex items-center gap-2.5"><input type="radio" name="cc3" value="Did not help" class="w-4 h-4" /> Did not help</label>
-
                       <label class="flex items-center gap-2.5"><input type="radio" name="cc3" value="N/A" class="w-4 h-4" /> N/A</label>
-
                     </div>
-
                   </div>
-
                 </div>
-
               </div>
-
-
 
               <div>
                 <h5 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-2 mt-6 mb-4">Service Perception Ratings</h5>
-                <p class="text-xs text-slate-400 mb-3">Please rate the following (1 - Strongly Disagree to 5 - Strongly Agree):</p>
-              
+                <p class="text-xs text-slate-400 mb-3">Please rate the following (1 - Strongly Disagree to 5 - Strongly Agree):</p>              
                 <div class="space-y-4">
                   <div class="bg-slate-50 border border-slate-200/60 p-4 rounded-xl space-y-3">
                     <label class="block text-sm font-semibold text-slate-950">SQD0. I am satisfied with the service that I availed.<br><span class="text-xs text-slate-400 font-normal italic">Nasiyahan ako serbisyo na aking hiling.</span></label>
