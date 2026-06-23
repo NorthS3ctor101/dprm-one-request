@@ -150,20 +150,20 @@ function loadRequestedDocuments() {
       previousPendingCount = currentProcessCount;
 
       fetch(`${API_URL}?action=getLatestFollowup`)
-        .then(res => res.json())
-        .then(response => {
-          if (response && response.message) {
-            const lastAckId = localStorage.getItem("lastAcknowledgedFollowupId");
-            const mySentId = localStorage.getItem("lastSentFollowupId"); // ID set when clicking Bell
-
-            if (response.timestamp !== lastAckId && response.timestamp !== mySentId) {
-              triggerFollowupUI(response.message);
-              
-              // We store it here so it doesn't pop up again on refresh
-              localStorage.setItem("lastAcknowledgedFollowupId", response.timestamp);
-            }
+      .then(res => res.json())
+      .then(response => {
+        if (response && response.message) {
+          const mySentId = localStorage.getItem("lastSentFollowupId"); 
+          const lastAcknowledgedId = localStorage.getItem("lastAcknowledgedFollowupId");
+    
+          if (response.id !== mySentId && response.id !== lastAcknowledgedId) {
+            
+            triggerFollowupUI(response.message);
+            
+            localStorage.setItem("lastAcknowledgedFollowupId", response.id);
           }
-        });
+        }
+      });
     })
     .catch(err => console.error("Error loading documents:", err));
 }
