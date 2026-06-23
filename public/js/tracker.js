@@ -593,13 +593,8 @@ function handleFollowup(index) {
 
 document.getElementById('chatToggleBtn').addEventListener('click', () => {
   const modal = document.getElementById('chatModal');
-  modal.classList.toggle('hidden');
-  isChatOpen = !modal.classList.contains('hidden');
-  
-  if (isChatOpen) {
-    chatUnreadCount = 0;
-    document.getElementById('chatBadge').classList.add('hidden');
-  }
+  modal.classList.remove('hidden');
+  loadMessages();
 });
 
 document.getElementById('minimizeChatBtn').addEventListener('click', () => {
