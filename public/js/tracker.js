@@ -26,7 +26,8 @@ let previousPendingCount = null;
 let filteredData = [];
 let selectedRowIndex = null;
 let unreadCount = 0;
-
+let chatUnreadCount = 0;
+let isChatOpen = false;
 
 function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
 function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
@@ -591,8 +592,14 @@ function handleFollowup(index) {
 
 
 document.getElementById('chatToggleBtn').addEventListener('click', () => {
-  document.getElementById('chatModal').classList.toggle('hidden');
-  loadMessages();
+  const modal = document.getElementById('chatModal');
+  modal.classList.toggle('hidden');
+  isChatOpen = !modal.classList.contains('hidden');
+  
+  if (isChatOpen) {
+    chatUnreadCount = 0;
+    document.getElementById('chatBadge').classList.add('hidden');
+  }
 });
 
 document.getElementById('sendChatBtn').addEventListener('click', () => {
@@ -614,18 +621,30 @@ function loadMessages() {
   fetch(`${API_URL}?action=getChatMessages`)
     .then(res => res.json())
     .then(data => {
-      if (!Array.isArray(data)) return; 
-      
       const box = document.getElementById('chatBox');
-      box.innerHTML = data.map(m => `
-        <div class="bg-white p-2 rounded-lg shadow-sm border">
-          <div class="font-bold text-[10px] text-blue-600">${m.name}</div>
-          <div class="text-xs text-slate-700">${m.message}</div>
-        </div>
-      `).join("");
+      const badge = document.getElementById('chatBadge');
+      
+      box.innerHTML = data.map(m => {
+        const time = new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        return `
+          <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-100 mb-2">
+            <div class="flex justify-between items-center mb-1">
+              <span class="font-bold text-[10px] text-blue-600">${m.name}</span>
+              <span class="text-[9px] text-slate-400">${time}</span>
+            </div>
+            <div class="text-xs text-slate-700 break-words">${m.message}</div>
+          </div>
+        `;
+      }).join("");
+
+      if (!isChatOpen) {
+        chatUnreadCount = data.length;
+        badge.textContent = chatUnreadCount;
+        badge.classList.remove('hidden');
+      }
+      
       box.scrollTop = box.scrollHeight;
-    })
-    .catch(err => console.error("Chat load error:", err));
+    });
 }
 
 setInterval(loadMessages, 15000);
