@@ -14,7 +14,7 @@ function login() {
   const loginBtn = document.getElementById("submitLoginBtn");
   const errorMessage = document.getElementById("errorMessage");
   
-  if (!loginBtn) return; // Guard clause
+  if (!loginBtn) return;
 
   const originalText = loginBtn.innerHTML;
 
