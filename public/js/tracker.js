@@ -35,14 +35,19 @@ function createRow(row) {
   const tr = document.createElement("tr");
   tr.className = "hover:bg-slate-50/70 transition-colors border-b border-slate-100";
   tr.id = `row-${row.index}`;
-  
+
   const currentStatus = row.status ? row.status.toString().toUpperCase().trim() : "";
+  const isCompleted = (currentStatus === 'COMPLETED');
   const isProcess = (currentStatus === 'ON PROCESS');
   
   let pillClass = isProcess ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-blue-50 text-blue-700 border-blue-200';
 
   let rawDate = row.dateAndTime || row.timestamp || row.dateRequested || row.date || row.dateTime || "";
   let displayTime = rawDate ? new Date(rawDate).toLocaleString() : "-";
+  
+  let displayProcTime = (row.processingTime === "Invalid Start Time" || !row.processingTime) 
+                        ? "Pending" 
+                        : row.processingTime;
 
   tr.innerHTML = `
     <td class="px-6 py-4 font-bold text-slate-900">${row.trackingNumber || '-'}</td>
@@ -51,9 +56,9 @@ function createRow(row) {
     <td class="px-6 py-4 text-slate-500">${row.region || '-'}</td>
     <td class="px-6 py-4 max-w-xs truncate text-slate-600">${row.requestedDocuments || row.requestedDocument || '-'}</td>
     <td class="px-6 py-4 text-slate-500">${row.purpose || '-'}</td>
-    <td class="px-6 py-4 font-medium text-slate-700">${row.processingTime || '-'}</td>
+    <td class="px-6 py-4 font-medium text-slate-700">${displayProcTime}</td>
     <td class="px-6 py-4 whitespace-nowrap">
-      <span class="inline-block px-3 py-1 text-xs font-bold rounded-full border ${pillClass}">${row.status || 'ON PROCESS'}</span>
+      <span class="inline-block px-3 py-1 text-xs font-bold rounded-full border ${pillClass}">${row.status || 'PENDING'}</span>
     </td>
     <td class="px-6 py-4 whitespace-nowrap text-center">
       <div class="inline-flex gap-1.5">
@@ -62,7 +67,7 @@ function createRow(row) {
         </button>
         <button class="release-btn text-green-600 bg-green-50 border border-green-200 p-2 rounded-xl disabled:opacity-30 disabled:cursor-not-allowed" 
                 data-index="${row.index}" 
-                ${!isProcess ? 'disabled' : ''}>
+                ${isCompleted ? 'disabled' : ''}>
           <span class="fas fa-check"></span>
         </button>
       </div>
