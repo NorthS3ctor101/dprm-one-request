@@ -602,7 +602,8 @@ document.getElementById('sendChatBtn').addEventListener('click', () => {
 
   fetch(`${API_URL}?action=saveChatMessage`, {
     method: 'POST',
-    body: JSON.stringify({ name, message: msg })
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'saveChatMessage', name: name, message: msg })
   }).then(() => {
     document.getElementById('chatMsg').value = "";
     loadMessages();
