@@ -51,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!loginBtn) {
     console.error("CRITICAL: Could not find element with ID 'submitLoginBtn'. Check your HTML!");
   } else {
-    console.log("Successfully found login button. Attaching listener...");
     loginBtn.addEventListener("click", () => {
       login();
     });
