@@ -7,9 +7,9 @@ function login() {
   const originalText = loginBtn.innerHTML;
 
   if (!code) {
-    console.error("No security code provided.");
+    showNotification("Security code is required to proceed.");
     return;
-  }
+}
 
   loginBtn.disabled = true;
   loginBtn.innerHTML = `<div class="animate-spin inline-block rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2 align-middle"></div>Logging in...`;
