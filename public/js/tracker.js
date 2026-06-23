@@ -520,51 +520,71 @@ document.addEventListener('DOMContentLoaded', () => {
   addListener("statusFilter", "change", () => { currentPage = 1; filterTable(); });
   addListener("rowsPerPage", "change", function() { rowsPerPage = parseInt(this.value, 10); currentPage = 1; filterTable(); });
 
-  document.getElementById("requestsTable")?.addEventListener("click", (e) => {
-  const btn = e.target.closest(".followup-btn");
-  if (btn) {
-    const row = requestMap[btn.dataset.index];
+document.getElementById("requestsTable")?.addEventListener("click", (e) => {
+  const target = e.target.closest("button");
+  if (!target) return;
+
+  const index = target.dataset.index;
+  if (!index) return;
+
+  if (target.classList.contains("followup-btn")) {
+    handleFollowup(index); 
+  } else if (target.classList.contains("survey-btn")) {
+    viewSurvey(index);
+  } else if (target.classList.contains("view-btn")) {
+    viewDetails(index);
+  } else if (target.classList.contains("release-btn")) {
+    const originalContent = target.innerHTML;
+    target.disabled = true;
+    target.innerHTML = `<span class="animate-spin fas fa-spinner"></span>`;
     
-    const confirmAction = confirm(`Send follow-up notification for Tracker #${row.trackingNumber}?`);
-    if (!confirmAction) return;
-
-    const originalHtml = btn.innerHTML;
-    btn.disabled = true;
-    btn.innerHTML = `<span class="animate-spin fas fa-spinner"></span>`;
-
-    const trackingNumber = row.trackingNumber;
-    const requester = row.nameOfPersonnel || row.clientFullName || "N/A";
-    const docs = row.requestedDocuments ? row.requestedDocuments.split(",").map(d => d.trim()) : [];
-    const docName = docs[4] || docs[0] || "N/A";
-    const followUpMsg = `TRACKER #: ${trackingNumber}\nREQUESTER: ${requester}\n\nRequested Document: ${docName}`;
-    const clickId = Date.now().toString();
-
-    fetch(`${API_URL}?action=sendFollowup&trackingNumber=${encodeURIComponent(trackingNumber)}&id=${encodeURIComponent(clickId)}&message=${encodeURIComponent(followUpMsg)}`)
-      .then(res => res.json())
-      .then(() => {
-        
-        localStorage.setItem("lastSentFollowupId", clickId); // Prevents sender from seeing their own modal
-        
-        btn.innerHTML = `<span class="fas fa-check text-green-600"></span>`;
-        
-        document.getElementById('toastMessage').textContent = "Success: Follow-up request transmitted.";
-        document.getElementById('pendingToast').classList.remove('hidden');
-        
-        setTimeout(() => document.getElementById('pendingToast').classList.add('hidden'), 3000);
-
-        setTimeout(() => {
-          btn.disabled = false;
-          btn.innerHTML = originalHtml;
-        }, 2000);
-      })
-      .catch(err => {
-        console.error("Follow-up failed:", err);
-        btn.disabled = false;
-        btn.innerHTML = originalHtml;
-        alert("Transmission failed. Please check your connection.");
-      });
+    markAsReleased(index);
+    
+    setTimeout(() => {
+      target.disabled = false;
+      target.innerHTML = originalContent;
+    }, 1000);
   }
 });
+
+function handleFollowup(index) {
+  const row = requestMap[index];
+  if (!confirm(`Send follow-up notification for Tracker #${row.trackingNumber}?`)) return;
+
+  const btn = document.querySelector(`button.followup-btn[data-index="${index}"]`);
+  const originalHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<span class="animate-spin fas fa-spinner"></span>`;
+
+  const trackingNumber = row.trackingNumber;
+  const requester = row.nameOfPersonnel || row.clientFullName || "N/A";
+  const docs = row.requestedDocuments ? row.requestedDocuments.split(",").map(d => d.trim()) : [];
+  const docName = docs[4] || docs[0] || "N/A";
+  const followUpMsg = `TRACKER #: ${trackingNumber}\nREQUESTER: ${requester}\n\nRequested Document: ${docName}`;
+  const clickId = Date.now().toString();
+
+  fetch(`${API_URL}?action=sendFollowup&trackingNumber=${encodeURIComponent(trackingNumber)}&id=${encodeURIComponent(clickId)}&message=${encodeURIComponent(followUpMsg)}`)
+    .then(res => res.json())
+    .then(() => {
+      localStorage.setItem("lastSentFollowupId", clickId);
+      btn.innerHTML = `<span class="fas fa-check text-green-600"></span>`;
+      
+      document.getElementById('toastMessage').textContent = "Success: Follow-up transmitted.";
+      document.getElementById('pendingToast').classList.remove('hidden');
+      setTimeout(() => document.getElementById('pendingToast').classList.add('hidden'), 3000);
+
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+      }, 2000);
+    })
+    .catch(err => {
+      console.error("Follow-up failed:", err);
+      btn.disabled = false;
+      btn.innerHTML = originalHtml;
+      alert("Transmission failed.");
+    });
+}
 
   if (localStorage.getItem('adminLoggedIn') !== 'true') window.location.href = "/admin";
 });
