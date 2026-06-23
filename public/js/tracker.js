@@ -1,15 +1,7 @@
 const channel = new BroadcastChannel('new-request-channel');
 
-let allData = [];
-let requestMap = {};
-let currentPage = 1;
-let rowsPerPage = 10;
-let previousPendingCount = null;
-let filteredData = [];
-let selectedRowIndex = null;
-let unreadCount = 0;
-
 channel.onmessage = (e) => { 
+  console.log("Channel message received:", e.data);
   if (!e.data) return;
 
   if (e.data.type === "NEW_PENDING_REQUEST") {
@@ -23,6 +15,16 @@ channel.onmessage = (e) => {
     updateTabBadge();
   }
 };
+
+let allData = [];
+let requestMap = {};
+let currentPage = 1;
+let rowsPerPage = 10;
+let previousPendingCount = null;
+let filteredData = [];
+let selectedRowIndex = null;
+let unreadCount = 0;
+
 
 function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
 function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
@@ -109,7 +111,7 @@ function initializeData() {
       
       filterTable();
       checkNotificationPermissionState();
-      setInterval(loadRequestedDocuments, 10000);
+      setInterval(, 10000);
     }).catch(err => {
       console.error("Database connection error:", err);
       document.getElementById("requestBody").innerHTML = "<tr><td colspan='10' class='text-center text-red-500 py-6 font-medium'>Error loading request streams. Please check API connection.</td></tr>";
@@ -123,22 +125,24 @@ function loadRequestedDocuments() {
       if (!Array.isArray(data)) return;
       
       const sortedData = data.sort((a, b) => parseInt(b.index, 10) - parseInt(a.index, 10));
-      const currentPendingCount = sortedData.filter(r => {
-        const stat = r.status ? r.status.toUpperCase().trim() : "";
-        return stat === "PENDING" || stat === "ON PROCESS";
-      }).length;
       
-      if (JSON.stringify(sortedData) !== JSON.stringify(allData)) {
+      const currentProcessCount = sortedData.filter(r => {
+        const stat = r.status ? r.status.toUpperCase().trim() : "";
+        return stat === "ON PROCESS";
+      }).length;
+
+      if (allData.length !== sortedData.length || JSON.stringify(sortedData[0]) !== JSON.stringify(allData[0])) {
         allData = sortedData; 
         filterTable(); 
       }
       
-      if (previousPendingCount !== null && currentPendingCount > previousPendingCount) {
-        const deltaCount = currentPendingCount - previousPendingCount;
+      if (previousPendingCount !== null && currentProcessCount > previousPendingCount) {
+        const deltaCount = currentProcessCount - previousPendingCount;
         const msg = `${deltaCount} new document request(s) received.`;
         
         showNotification(msg); 
         triggerSystemDesktopBubble(deltaCount); 
+        
         channel.postMessage({ type: "NEW_PENDING_REQUEST", message: msg });
 
         if (document.hidden) {
@@ -146,8 +150,10 @@ function loadRequestedDocuments() {
           updateTabBadge();
         }
       }
-      previousPendingCount = currentPendingCount;
-    });
+    
+      previousPendingCount = currentProcessCount;
+    })
+    .catch(err => console.error("Error loading documents:", err));
 }
 
 function checkNotificationPermissionState() {
