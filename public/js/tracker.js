@@ -36,14 +36,10 @@ function createRow(row) {
   tr.className = "hover:bg-slate-50/70 transition-colors border-b border-slate-100";
   tr.id = `row-${row.index}`;
   
-  let pillClass = 'bg-slate-100 text-slate-700 border-slate-200';
   const currentStatus = row.status ? row.status.toString().toUpperCase().trim() : "";
+  const isProcess = (currentStatus === 'ON PROCESS');
   
-  if (currentStatus === 'PENDING' || currentStatus === 'ON PROCESS') {
-    pillClass = 'bg-amber-50 text-amber-700 border-amber-200';
-  } else if (currentStatus === 'COMPLETED' || currentStatus === 'RECEIVED') {
-    pillClass = 'bg-blue-50 text-blue-700 border-blue-200';
-  }
+  let pillClass = isProcess ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-blue-50 text-blue-700 border-blue-200';
 
   let rawDate = row.dateAndTime || row.timestamp || row.dateRequested || row.date || row.dateTime || "";
   let displayTime = rawDate ? new Date(rawDate).toLocaleString() : "-";
@@ -57,14 +53,16 @@ function createRow(row) {
     <td class="px-6 py-4 text-slate-500">${row.purpose || '-'}</td>
     <td class="px-6 py-4 font-medium text-slate-700">${row.processingTime || '-'}</td>
     <td class="px-6 py-4 whitespace-nowrap">
-      <span class="inline-block px-3 py-1 text-xs font-bold rounded-full border ${pillClass}">${row.status || 'PENDING'}</span>
+      <span class="inline-block px-3 py-1 text-xs font-bold rounded-full border ${pillClass}">${row.status || 'ON PROCESS'}</span>
     </td>
     <td class="px-6 py-4 whitespace-nowrap text-center">
       <div class="inline-flex gap-1.5">
-        <button class="view-btn text-cyan-600 bg-cyan-50 border p-2 rounded-xl" data-index="${row.index}">
+        <button class="view-btn text-cyan-600 bg-cyan-50 border border-cyan-200 p-2 rounded-xl" data-index="${row.index}">
           <span class="fas fa-eye"></span>
         </button>
-        <button class="release-btn text-green-600 bg-green-50 border p-2 rounded-xl" data-index="${row.index}" ${(currentStatus !== "ON PROCESS") ? 'disabled' : ''}>
+        <button class="release-btn text-green-600 bg-green-50 border border-green-200 p-2 rounded-xl disabled:opacity-30 disabled:cursor-not-allowed" 
+                data-index="${row.index}" 
+                ${!isProcess ? 'disabled' : ''}>
           <span class="fas fa-check"></span>
         </button>
       </div>
