@@ -45,8 +45,6 @@ function login() {
     }
   })
   .catch((err) => {
-    console.error("Login Error:", err);
-    
     loginBtn.disabled = false;
     loginBtn.innerHTML = originalText;
     
