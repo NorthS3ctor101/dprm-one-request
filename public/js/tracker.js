@@ -412,10 +412,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
   document.getElementById("preparedBySubmitBtn").addEventListener("click", submitPreparedBy);
 
-  document.getElementById("closeToastBtn").addEventListener("click", () => {
-    document.getElementById('pendingToast').classList.add('hidden');
-  });
-  
   document.getElementById("requestsTable").addEventListener("click", (e) => {
   const viewBtn = e.target.closest(".view-btn");
   const relBtn = e.target.closest(".release-btn");
@@ -438,6 +434,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1000); 
   }
 });
+
+    document.getElementById("closeToastBtn").addEventListener("click", () => {
+    document.getElementById('pendingToast').classList.add('hidden');
+  });
 
   document.getElementById("statusFilter").addEventListener("change", () => { currentPage = 1; filterTable(); });
   document.getElementById("rowsPerPage").addEventListener("change", function() { rowsPerPage = parseInt(this.value, 10); currentPage = 1; filterTable(); });
