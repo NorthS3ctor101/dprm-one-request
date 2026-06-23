@@ -9,11 +9,14 @@
   <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
   <script src="/js/config.js"></script>
   <script src="/js/login.js"></script>
 </head>
 <body class="bg-slate-50 font-sans antialiased h-screen w-screen flex items-center justify-center p-4">
+
   <main class="w-full max-w-md bg-white border border-slate-200 rounded-2xl p-6 md:p-8 space-y-6 shadow-xl shadow-slate-200/50">
+    
     <div class="text-center space-y-2">
       <img src="/assets/logo.png" alt="DPRM Logo" class="w-20 h-auto mx-auto mb-2" />
       <h2 class="text-xl font-bold tracking-tight text-slate-800">
@@ -27,7 +30,7 @@
         <input type="password" id="securityCode" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3.5 text-center text-lg font-bold tracking-widest text-slate-800 placeholder:font-normal placeholder:tracking-normal focus:outline-none focus:border-[#1d3557] focus:ring-2 focus:ring-[#1d3557]/10 transition-all placeholder-slate-400" placeholder="••••••••" />
       </div>
       
-      <button id="submitLoginBtn" class="w-full bg-[#1d3557] hover:bg-[#11223b] text-white font-semibold py-3.5 px-4 rounded-xl transition-all text-sm tracking-wider uppercase cursor-pointer shadow-md hover:shadow-lg" onclick="login()">
+      <button id="submitLoginBtn" class="w-full bg-[#1d3557] hover:bg-[#11223b] text-white font-semibold py-3.5 px-4 rounded-xl transition-all text-sm tracking-wider uppercase cursor-pointer shadow-md hover:shadow-lg">
         LOGIN
       </button>
 
@@ -46,5 +49,6 @@
       </p>
     </div>
   </main>
+
 </body>
 </html>
