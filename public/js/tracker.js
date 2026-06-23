@@ -589,6 +589,44 @@ function handleFollowup(index) {
   if (localStorage.getItem('adminLoggedIn') !== 'true') window.location.href = "/admin";
 });
 
+
+document.getElementById('chatToggleBtn').addEventListener('click', () => {
+  document.getElementById('chatModal').classList.toggle('hidden');
+  loadMessages();
+});
+
+document.getElementById('sendChatBtn').addEventListener('click', () => {
+  const name = document.getElementById('chatName').value;
+  const msg = document.getElementById('chatMsg').value;
+  if (!name || !msg) return alert("Please enter name and message.");
+
+  fetch(`${API_URL}?action=saveChatMessage`, {
+    method: 'POST',
+    body: JSON.stringify({ name, message: msg })
+  }).then(() => {
+    document.getElementById('chatMsg').value = "";
+    loadMessages();
+  });
+});
+
+function loadMessages() {
+  fetch(`${API_URL}?action=getChatMessages`)
+    .then(res => res.json())
+    .then(data => {
+      const box = document.getElementById('chatBox');
+      box.innerHTML = data.map(m => `
+        <div class="bg-white p-2 rounded-lg shadow-sm border">
+          <div class="font-bold text-[10px] text-blue-600">${m.name}</div>
+          <div class="text-xs text-slate-700">${m.message}</div>
+        </div>
+      `).join("");
+      box.scrollTop = box.scrollHeight;
+    });
+}
+
+setInterval(loadMessages, 15000);
+
+
 function triggerFollowupUI(msg) {
   const modal = document.getElementById('followupModal');
   const content = document.getElementById('followupContent');
