@@ -4,6 +4,7 @@ function login() {
   const errorMessage = document.getElementById("errorMessage");
   const originalText = loginBtn.innerHTML;
 
+
   if (!code) return;
 
   loginBtn.disabled = true;
@@ -15,11 +16,12 @@ function login() {
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ 
+    body: JSON.stringify({
       action: 'verifySecurityCode',
-      code: code 
+      code: code
     })
   })
+
   .then(res => res.json())
   .then(response => {
     if (response && response.success === true) {
@@ -29,6 +31,7 @@ function login() {
       throw new Error("Invalid response match credential");
     }
   })
+
   .catch((err) => {
     console.error("Login Error:", err);
     loginBtn.disabled = false;
