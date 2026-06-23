@@ -585,18 +585,19 @@ document.addEventListener('DOMContentLoaded', () => {
 function triggerFollowupUI(msg) {
   const modal = document.getElementById('followupModal');
   const content = document.getElementById('followupContent');
-
-  const textToDisplay = (typeof msg === 'object') ? (msg.message || "") : msg;
-
-  content.style.whiteSpace = "pre-line";
-  content.textContent = textToDisplay;
+  const modalBox = modal.querySelector('.animate-vibrate');
   
+  content.textContent = (typeof msg === 'object') ? (msg.message || "") : msg;
   modal.classList.remove('hidden');
   
-  const sfx = document.getElementById("notificationSound");
-  if (sfx) {
-    sfx.play().catch(e => console.warn("Audio play blocked", e));
+  if (modalBox) {
+    setTimeout(() => {
+      modalBox.classList.remove('animate-vibrate');
+    }, 3000);
   }
+  
+  const sfx = document.getElementById("notificationSound");
+  if (sfx) sfx.play().catch(e => console.warn("Audio play blocked", e));
 }
 
 function setViewHeight() {
