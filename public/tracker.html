@@ -8,6 +8,20 @@
   <title>DPRM-OneRequest Tracker</title>
   <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
   <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    @keyframes vibrate {
+      0% { transform: translate(0); }
+      20% { transform: translate(-4px, 2px); }
+      40% { transform: translate(-4px, -2px); }
+      60% { transform: translate(4px, 2px); }
+      80% { transform: translate(4px, -2px); }
+      100% { transform: translate(0); }
+    }
+    
+    .animate-vibrate {
+      animation: vibrate 0.3s linear infinite;
+    }
+  </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="/js/config.js" defer></script>
   <script src="/js/tracker.js" defer></script>
