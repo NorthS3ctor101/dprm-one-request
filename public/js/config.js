@@ -1,1 +1,1 @@
-const API_URL = "/api/proxy";
+window.API_URL = "/api/proxy";
