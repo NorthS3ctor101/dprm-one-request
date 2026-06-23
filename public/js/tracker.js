@@ -222,20 +222,19 @@ window.viewDetails = function(rowIndex) {
   if (!row) return;
 
   const formatUI = (val) => {
-    if (!val || val === "-" || val === "" || val === "null" || val === "undefined") return "-";
-      
-      if (/^\d{4}-\d{2}-\d{2}$/.test(val)) {
-        const d = new Date(val + "T00:00:00"); // Force midnight
-        return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-      }
-    
-      const d = new Date(val);
-      return isNaN(d.getTime()) ? val : d.toLocaleDateString(undefined, { 
-        year: 'numeric', month: 'short', day: 'numeric', 
-        hour: '2-digit', minute: '2-digit' 
-      });
-    };
-    
+    if (!val || val === "N/A" || val === "" || val === "null" || val === "undefined") return "-";
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(val)) {
+      const d = new Date(val + "T00:00:00"); 
+      return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+  
+    const d = new Date(val);
+    return isNaN(d.getTime()) ? "-" : d.toLocaleDateString(undefined, { 
+      year: 'numeric', month: 'short', day: 'numeric', 
+      hour: '2-digit', minute: '2-digit' 
+    });
+  };
   const overlay = document.getElementById("loadingOverlay");
   const tbody = document.getElementById("detailsTableBody");
 
