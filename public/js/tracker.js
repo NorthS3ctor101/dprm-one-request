@@ -620,38 +620,29 @@ document.getElementById('minimizeChatBtn').addEventListener('click', () => {
 });
 
 document.getElementById('sendChatBtn').addEventListener('click', () => {
-  const nameInput = document.getElementById('chatName');
-  const msgInput = document.getElementById('chatMsg');
-  const btn = document.getElementById('sendChatBtn');
+  const name = document.getElementById('chatName').value;
+  const msg = document.getElementById('chatMsg').value;
+  
+  if (!name || !msg) return alert("Please enter name and message.");
 
-  if (!nameInput.value || !msgInput.value) return alert("Please enter name and message.");
-
-  const originalHtml = btn.innerHTML;
-  btn.disabled = true;
-  btn.innerHTML = `<span class="animate-spin fas fa-spinner"></span> Sending...`;
+  console.log("Sending to:", `${API_URL}?action=saveChatMessage`, { name, message: msg });
 
   fetch(`${API_URL}?action=saveChatMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ 
         action: 'saveChatMessage', 
-        name: nameInput.value, 
-        message: msgInput.value 
+        name: name, 
+        message: msg 
     })
   })
   .then(res => res.json())
-  .then(() => {
-    msgInput.value = "";
+  .then(data => {
+    console.log("Response from server:", data);
+    document.getElementById('chatMsg').value = "";
     loadMessages();
   })
-  .catch(err => {
-    console.error("Chat error:", err);
-    alert("Failed to send message.");
-  })
-  .finally(() => {
-    btn.disabled = false;
-    btn.innerHTML = originalHtml;
-  });
+  .catch(err => console.error("Chat Error:", err));
 });
 
 function loadMessages() {
