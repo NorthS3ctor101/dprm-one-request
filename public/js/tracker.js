@@ -544,16 +544,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (e.target.closest(".followup-btn")) {
         const btn = e.target.closest(".followup-btn");
+        
+        if (!confirm("Send follow-up notification for this request?")) return;
+      
         const row = requestMap[btn.dataset.index];
+        
+        const originalHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<span class="animate-spin fas fa-spinner"></span>`;
+      
         const trackingNumber = row.trackingNumber;
         const requester = row.nameOfPersonnel || row.clientFullName || "N/A";
         const docs = row.requestedDocuments ? row.requestedDocuments.split(",").map(d => d.trim()) : [];
         const docName = docs[4] || docs[0] || "N/A";
+      
         const followUpMsg = `TRACKER #: ${trackingNumber}\nREQUESTER: ${requester}\n\nRequested Document: ${docName}`;
 
-      fetch(`${API_URL}?action=sendFollowup&trackingNumber=${encodeURIComponent(trackingNumber)}&message=${encodeURIComponent(followUpMsg)}`)
-      .then(() => alert("Follow-up sent."));
-      }    
+        fetch(`${API_URL}?action=sendFollowup&trackingNumber=${encodeURIComponent(trackingNumber)}&message=${encodeURIComponent(followUpMsg)}`)
+          .then(res => res.json())
+          .then(() => {
+            
+            btn.innerHTML = `<span class="fas fa-check text-green-600"></span>`;
+            setTimeout(() => {
+              btn.disabled = false;
+              btn.innerHTML = originalHtml;
+            }, 2000);
+          })
+      .catch(err => {
+        console.error("Follow-up failed:", err);
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+        alert("Failed to send follow-up. Please try again.");
+      });
+    }   
   });
 
   if (localStorage.getItem('adminLoggedIn') !== 'true') window.location.href = "/admin";
