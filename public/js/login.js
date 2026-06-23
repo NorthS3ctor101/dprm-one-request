@@ -1,19 +1,35 @@
 function showNotification(msg) {
   const toast = document.getElementById('toastMessage');
-  if (toast) {
+  const toastContainer = document.getElementById('pendingToast');
+  
+  if (toast && toastContainer) {
     toast.textContent = msg;
-    document.getElementById('pendingToast').classList.remove('hidden');
-    setTimeout(() => document.getElementById('pendingToast').classList.add('hidden'), 3000);
+    toastContainer.classList.remove('hidden');
+    // Auto-hide after 4 seconds
+    setTimeout(() => toastContainer.classList.add('hidden'), 4000);
   } else {
     alert(msg);
   }
 }
 
+function showInlineError(msg) {
+  const errDiv = document.getElementById('errorMessage');
+  const errText = document.getElementById('errorMessageText');
+  
+  if (errDiv) {
+    if (errText) errText.textContent = msg;
+    errDiv.classList.remove('hidden');
+  }
+}
+
 function login() {
   const apiUrl = window.API_URL || "/api/proxy"; 
-  const code = document.getElementById("securityCode").value.trim();
+  const code = document.getElementById("securityCode")?.value.trim();
   const loginBtn = document.getElementById("submitLoginBtn");
   const errorMessage = document.getElementById("errorMessage");
+  
+  if (!loginBtn) return; // Guard clause
+
   const originalText = loginBtn.innerHTML;
 
   if (!code) {
@@ -23,13 +39,11 @@ function login() {
 
   loginBtn.disabled = true;
   loginBtn.innerHTML = `<div class="animate-spin inline-block rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2 align-middle"></div>Logging in...`;
-  errorMessage.classList.add('hidden');
+  if (errorMessage) errorMessage.classList.add('hidden');
 
   fetch(`${apiUrl}?action=verifySecurityCode`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ 
       action: 'verifySecurityCode',
       code: code 
@@ -50,7 +64,7 @@ function login() {
     loginBtn.disabled = false;
     loginBtn.innerHTML = originalText;
     
-    errorMessage.classList.remove('hidden');
+    showInlineError("Access Denied: Invalid security credentials");
   });
 }
 
@@ -58,12 +72,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginBtn = document.getElementById("submitLoginBtn");
   const inputField = document.getElementById("securityCode");
 
-  if (!loginBtn) {
-    console.error("CRITICAL: Could not find element with ID 'submitLoginBtn'. Check your HTML!");
+  if (loginBtn) {
+    loginBtn.addEventListener("click", login);
   } else {
-    loginBtn.addEventListener("click", () => {
-      login();
-    });
+    console.error("CRITICAL: 'submitLoginBtn' not found in DOM.");
   }
 
   if (inputField) {
