@@ -239,7 +239,7 @@ window.viewDetails = function(rowIndex) {
       fetch(`${API_URL}?action=getRequestDetails&trackingNumber=${encodeURIComponent(row.trackingNumber)}&requestedDocument=${encodeURIComponent(row.requestedDocuments || row.requestedDocument || '')}`)
         .then(res => res.json())
         .then(d => {
-          console.log("Debug Data:", d); 
+          console.log("Debug Data:", JSON.stringify(d, null, 2));
 
           const targetRows = [
             ["Reference Number", d.trackingNumber, "font-bold text-emerald-600 text-base"],
