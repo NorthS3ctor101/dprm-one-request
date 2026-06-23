@@ -3,7 +3,11 @@ function showInlineError(msg) {
   const errText = document.getElementById('errorMessageText');
   
   if (errDiv) {
-    if (errText) errText.textContent = msg;
+    if (errText) {
+      errText.textContent = msg;
+    } else {
+      errDiv.textContent = msg;
+    }
     errDiv.classList.remove('hidden');
   }
 }
