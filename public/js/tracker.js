@@ -225,13 +225,12 @@ window.viewDetails = function(rowIndex) {
     if (!isoDate || isoDate === "" || isoDate === "null" || isoDate === "undefined") return "-";
     const d = new Date(isoDate);
     return isNaN(d.getTime()) ? "-" : d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-  };
+  }; 
 
   const overlay = document.getElementById("loadingOverlay");
   const tbody = document.getElementById("detailsTableBody");
 
   tbody.innerHTML = ""; 
-  
   overlay.classList.remove('hidden');
   openModal('viewDetailsModal');
 
@@ -240,6 +239,8 @@ window.viewDetails = function(rowIndex) {
       fetch(`${API_URL}?action=getRequestDetails&trackingNumber=${encodeURIComponent(row.trackingNumber)}&requestedDocument=${encodeURIComponent(row.requestedDocuments || row.requestedDocument || '')}`)
         .then(res => res.json())
         .then(d => {
+          console.log("Debug Data:", d); 
+
           const targetRows = [
             ["Reference Number", d.trackingNumber, "font-bold text-emerald-600 text-base"],
             ["Date of Requested", formatUI(d.dateAndTime)],
@@ -251,7 +252,7 @@ window.viewDetails = function(rowIndex) {
             ["Region Assignment", d.region],
             ["Unit/Office", d.jailUnitOffice],
             ["Date of First Appointment", formatUI(d.dateFirstAppointment)],
-            ["Date of Separation", d.dateRetirementSeparation ? new Date(d.dateRetirementSeparation).toLocaleDateString() : ""],
+            ["Date of Separation", d.dateRetirementSeparation ? new Date(d.dateRetirementSeparation).toLocaleDateString() : "-"],
             ["Client Notes", d.notes, "italic text-slate-400"],
             ["Processor", d.preparedBy],
             ["Completion Timestamp", d.dateAndTimeCompleted ? new Date(d.dateAndTimeCompleted).toLocaleString() : ""],
