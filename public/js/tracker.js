@@ -236,11 +236,6 @@ window.viewDetails = function(rowIndex) {
       });
     };
     
-    return d.toLocaleDateString(undefined, { 
-      year: 'numeric', month: 'short', day: 'numeric' 
-    });
-  };
-
   const overlay = document.getElementById("loadingOverlay");
   const tbody = document.getElementById("detailsTableBody");
 
