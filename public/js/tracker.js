@@ -412,55 +412,46 @@ document.addEventListener('DOMContentLoaded', () => {
   setupModalClosers();
   initializeData();
 
-  document.getElementById("reportBtn").addEventListener("click", generateReport);
-  document.getElementById("logoutBtn").addEventListener("click", logout);
-  document.getElementById("enableNotifBtn").addEventListener("click", requestDesktopNotificationPermission);
-  
-  document.getElementById("prevPageBtn").addEventListener("click", previousPage);
-  document.getElementById("nextPageBtn").addEventListener("click", nextPage);
-  
-  document.getElementById("generateReportBtn").addEventListener("click", fetchReportData);
-  document.getElementById("preparedBySubmitBtn").addEventListener("click", submitPreparedBy);
+  const addListener = (id, event, handler) => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener(event, handler);
+  };
 
-  document.getElementById("searchInput").addEventListener("input", filterTable);
-  document.getElementById("statusFilter").addEventListener("change", () => { 
-    currentPage = 1; 
-    filterTable(); 
+  addListener("reportBtn", "click", generateReport);
+  addListener("logoutBtn", "click", logout);
+  addListener("enableNotifBtn", "click", requestDesktopNotificationPermission);
+  addListener("prevPageBtn", "click", previousPage);
+  addListener("nextPageBtn", "click", nextPage);
+  addListener("generateReportBtn", "click", fetchReportData);
+  addListener("preparedBySubmitBtn", "click", submitPreparedBy);
+  addListener("closeToastBtn", "click", () => document.getElementById('pendingToast').classList.add('hidden'));
+
+  addListener("searchInput", "input", filterTable);
+  addListener("statusFilter", "change", () => { currentPage = 1; filterTable(); });
+  addListener("rowsPerPage", "change", function() { rowsPerPage = parseInt(this.value, 10); currentPage = 1; filterTable(); });
+
+  document.getElementById("requestsTable")?.addEventListener("click", (e) => {
+    const viewBtn = e.target.closest(".view-btn");
+    const relBtn = e.target.closest(".release-btn");
+    
+    if (viewBtn) {
+      viewDetails(viewBtn.dataset.index);
+    }
+    
+    if (relBtn) {
+      const originalContent = relBtn.innerHTML;
+      relBtn.disabled = true;
+      relBtn.innerHTML = `<span class="animate-spin fas fa-spinner"></span>`;
+      
+      markAsReleased(relBtn.dataset.index);
+      
+      setTimeout(() => {
+        relBtn.disabled = false;
+        relBtn.innerHTML = originalContent;
+      }, 1000); 
+    }
   });
-  
-  document.getElementById("requestsTable").addEventListener("click", (e) => {
-  const viewBtn = e.target.closest(".view-btn");
-  const relBtn = e.target.closest(".release-btn");
-  
-  if (viewBtn) {
-    viewDetails(viewBtn.dataset.index);
-  }
-  
-  if (relBtn) {
-    const originalContent = relBtn.innerHTML;
-    
-    relBtn.disabled = true;
-    relBtn.innerHTML = `<span class="animate-spin fas fa-spinner"></span>`;
-    
-    markAsReleased(relBtn.dataset.index);
-  
-    setTimeout(() => {
-      relBtn.disabled = false;
-      relBtn.innerHTML = originalContent;
-    }, 1000); 
-  }
-});
 
-   const closeToastBtn = document.getElementById("closeToastBtn");
-  if (closeToastBtn) {
-    closeToastBtn.addEventListener("click", () => {
-      document.getElementById('pendingToast').classList.add('hidden');
-    });
-  }
-
-  document.getElementById("statusFilter").addEventListener("change", () => { currentPage = 1; filterTable(); });
-  document.getElementById("rowsPerPage").addEventListener("change", function() { rowsPerPage = parseInt(this.value, 10); currentPage = 1; filterTable(); });
-  
   if (localStorage.getItem('adminLoggedIn') !== 'true') window.location.href = "/admin";
 });
 
