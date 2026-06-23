@@ -411,7 +411,12 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById("nextPageBtn").addEventListener("click", nextPage);
   
   document.getElementById("preparedBySubmitBtn").addEventListener("click", submitPreparedBy);
+
   document.getElementById("searchInput").addEventListener("input", filterTable);
+  document.getElementById("statusFilter").addEventListener("change", () => { 
+    currentPage = 1; 
+    filterTable(); 
+  });
   
   document.getElementById("requestsTable").addEventListener("click", (e) => {
   const viewBtn = e.target.closest(".view-btn");
