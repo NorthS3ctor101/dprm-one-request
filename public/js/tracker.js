@@ -564,7 +564,7 @@ document.addEventListener('DOMContentLoaded', () => {
       
         const followUpMsg = `TRACKER #: ${trackingNumber}\nREQUESTER: ${requester}\n\nRequested Document: ${docName}`;
 
-        fetch(`${API_URL}?action=sendFollowup&trackingNumber=${row.trackingNumber}&message=...&id=${clickId}`)
+       fetch(`${API_URL}?action=sendFollowup&trackingNumber=${encodeURIComponent(trackingNumber)}&id=${encodeURIComponent(clickId)}&message=${encodeURIComponent(followUpMsg)}`)
         .then(() => {
             
             btn.innerHTML = `<span class="fas fa-check text-green-600"></span>`;
