@@ -1,3 +1,5 @@
+const sessionStartTime = new Date().getTime();
+
 const channel = new BroadcastChannel('new-request-channel');
 
 channel.onmessage = (e) => { 
@@ -152,18 +154,18 @@ function loadRequestedDocuments() {
       fetch(`${API_URL}?action=getLatestFollowup`)
       .then(res => res.json())
       .then(response => {
-        if (response && response.message) {
-          const mySentId = localStorage.getItem("lastSentFollowupId"); 
-          const lastAcknowledgedId = localStorage.getItem("lastAcknowledgedFollowupId");
-    
-          if (response.id !== mySentId && response.id !== lastAcknowledgedId) {
-            
-            triggerFollowupUI(response.message);
-            
-            localStorage.setItem("lastAcknowledgedFollowupId", response.id);
-          }
-        }
-      });
+    if (response && response.message) {
+      const mySentId = localStorage.getItem("lastSentFollowupId"); 
+      const lastAcknowledgedId = localStorage.getItem("lastAcknowledgedFollowupId");
+      
+      const msgTime = new Date(response.timestamp).getTime();
+      
+      if (response.id !== mySentId && response.id !== lastAcknowledgedId && msgTime > sessionStartTime) {
+        triggerFollowupUI(response.message);
+        localStorage.setItem("lastAcknowledgedFollowupId", response.id);
+      }
+    }
+  });
     })
     .catch(err => console.error("Error loading documents:", err));
 }
