@@ -221,11 +221,24 @@ window.viewDetails = function(rowIndex) {
   const row = requestMap[rowIndex];
   if (!row) return;
 
-  const formatUI = (isoDate) => {
-    if (!isoDate || isoDate === "" || isoDate === "null" || isoDate === "undefined") return "-";
-    const d = new Date(isoDate);
-    return isNaN(d.getTime()) ? "-" : d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-  }; 
+  const formatUI = (val) => {
+    if (!val || val === "-" || val === "" || val === "null" || val === "undefined") return "-";
+    
+    const d = new Date(val);
+    if (isNaN(d.getTime())) return val; // Return original if not a valid date
+
+    const valStr = val.toString();
+    if (valStr.includes(':')) {
+      return d.toLocaleDateString(undefined, { 
+        year: 'numeric', month: 'short', day: 'numeric', 
+        hour: '2-digit', minute: '2-digit' 
+      });
+    }
+    
+    return d.toLocaleDateString(undefined, { 
+      year: 'numeric', month: 'short', day: 'numeric' 
+    });
+  };
 
   const overlay = document.getElementById("loadingOverlay");
   const tbody = document.getElementById("detailsTableBody");
@@ -239,8 +252,6 @@ window.viewDetails = function(rowIndex) {
       fetch(`${API_URL}?action=getRequestDetails&trackingNumber=${encodeURIComponent(row.trackingNumber)}&requestedDocument=${encodeURIComponent(row.requestedDocuments || row.requestedDocument || '')}`)
         .then(res => res.json())
         .then(d => {
-          console.log("Debug Data:", JSON.stringify(d, null, 2));
-
           const targetRows = [
             ["Reference Number", d.trackingNumber, "font-bold text-emerald-600 text-base"],
             ["Date of Requested", formatUI(d.dateAndTime)],
@@ -252,10 +263,10 @@ window.viewDetails = function(rowIndex) {
             ["Region Assignment", d.region],
             ["Unit/Office", d.jailUnitOffice],
             ["Date of First Appointment", formatUI(d.dateFirstAppointment)],
-            ["Date of Separation", d.dateRetirementSeparation ? new Date(d.dateRetirementSeparation).toLocaleDateString() : "-"],
+            ["Date of Separation", formatUI(d.dateRetirementSeparation)],
             ["Client Notes", d.notes, "italic text-slate-400"],
             ["Processor", d.preparedBy],
-            ["Completion Timestamp", d.dateAndTimeCompleted ? new Date(d.dateAndTimeCompleted).toLocaleString() : ""],
+            ["Completion Timestamp", formatUI(d.dateAndTimeCompleted)],
             ["Processing Time", d.processingTime],
             ["Processor Comments", d.remarks],
             ["Status", d.status, "font-bold text-blue-700"]
@@ -278,7 +289,6 @@ window.viewDetails = function(rowIndex) {
     });
   });
 };
-
 window.markAsReleased = function(rowIndex) {
   const row = requestMap[rowIndex];
   if (!row) return;
