@@ -602,6 +602,21 @@ document.getElementById('chatToggleBtn').addEventListener('click', () => {
   }
 });
 
+document.getElementById('minimizeChatBtn').addEventListener('click', () => {
+  const container = document.getElementById('chatContentContainer');
+  const icon = document.querySelector('#minimizeChatBtn i');
+  
+  container.classList.toggle('hidden');
+  
+  if (container.classList.contains('hidden')) {
+    icon.classList.remove('fa-minus');
+    icon.classList.add('fa-plus');
+  } else {
+    icon.classList.remove('fa-plus');
+    icon.classList.add('fa-minus');
+  }
+});
+
 document.getElementById('sendChatBtn').addEventListener('click', () => {
   const name = document.getElementById('chatName').value;
   const msg = document.getElementById('chatMsg').value;
