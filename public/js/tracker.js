@@ -41,9 +41,8 @@ function createRow(row) {
   tr.className = "hover:bg-slate-50/70 transition-colors border-b border-slate-100";
   tr.id = `row-${row.index}`;
 
-  const currentStatus = row.status ? row.status.toString().toUpperCase().trim() : "";
-  const currentStatus = row.status ? row.status.toString().toUpperCase().trim() : "ON PROCESS";
-  const isCompleted = (currentStatus === 'COMPLETED');
+  const status = row.status ? row.status.toString().toUpperCase().trim() : "ON PROCESS";
+  const isCompleted = (status === 'COMPLETED');
   
   let pillClass = isProcess ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-blue-50 text-blue-700 border-blue-200';
 
