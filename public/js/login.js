@@ -45,8 +45,6 @@ function login() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  console.log("DOM fully loaded and parsed");
-
   const loginBtn = document.getElementById("submitLoginBtn");
   const inputField = document.getElementById("securityCode");
 
@@ -55,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     console.log("Successfully found login button. Attaching listener...");
     loginBtn.addEventListener("click", () => {
-      console.log("Button click detected!");
       login();
     });
   }
