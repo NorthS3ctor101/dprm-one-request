@@ -270,13 +270,26 @@ window.viewDetails = function(rowIndex) {
 };
 
 window.markAsReleased = function(rowIndex) {
+  const row = requestMap[rowIndex];
+  if (!row) return;
+
+  const status = row.status ? row.status.toString().toUpperCase().trim() : "";
+  if (status !== "ON PROCESS") {
+    alert("Authorization denied: Only requests 'ON PROCESS' can be marked as completed.");
+    return;
+  }
+
   selectedRowIndex = rowIndex;
   fetch(`${API_URL}?action=getPreparedByList`)
     .then(res => res.json())
     .then(names => {
       const s = document.getElementById("preparedBySelect");
       s.innerHTML = '<option value="">-- Select Name --</option>';
-      names.forEach(n => { const o = document.createElement("option"); o.value = n; o.textContent = n; s.appendChild(o); });
+      names.forEach(n => { 
+        const o = document.createElement("option"); 
+        o.value = n; o.textContent = n; 
+        s.appendChild(o); 
+      });
       document.getElementById("preparedByError").classList.add('hidden');
       openModal('preparedByModal');
     });
