@@ -521,68 +521,50 @@ document.addEventListener('DOMContentLoaded', () => {
   addListener("rowsPerPage", "change", function() { rowsPerPage = parseInt(this.value, 10); currentPage = 1; filterTable(); });
 
   document.getElementById("requestsTable")?.addEventListener("click", (e) => {
-    const surveyBtn = e.target.closest(".survey-btn");
-      if (surveyBtn) {
-        viewSurvey(surveyBtn.dataset.index);
-      }
+  const btn = e.target.closest(".followup-btn");
+  if (btn) {
+    const row = requestMap[btn.dataset.index];
     
-    const viewBtn = e.target.closest(".view-btn");
-    const relBtn = e.target.closest(".release-btn");
-    
-    if (viewBtn) {
-      viewDetails(viewBtn.dataset.index);
-    }
-    
-    if (relBtn) {
-      const originalContent = relBtn.innerHTML;
-      relBtn.disabled = true;
-      relBtn.innerHTML = `<span class="animate-spin fas fa-spinner"></span>`;
-      
-      markAsReleased(relBtn.dataset.index);
-      
-      setTimeout(() => {
-        relBtn.disabled = false;
-        relBtn.innerHTML = originalContent;
-      }, 1000); 
-    }
+    const confirmAction = confirm(`Send follow-up notification for Tracker #${row.trackingNumber}?`);
+    if (!confirmAction) return;
 
-      if (e.target.closest(".followup-btn")) {
-        const btn = e.target.closest(".followup-btn");  
-        if (!confirm("Send follow-up notification for this request?")) return;
-      
-        const row = requestMap[btn.dataset.index];
-        
-        const clickId = Date.now().toString();
-        localStorage.setItem("lastSentFollowupId", clickId);
-        
-        const originalHtml = btn.innerHTML;
-        btn.disabled = true;
-        btn.innerHTML = `<span class="animate-spin fas fa-spinner"></span>`;
-      
-        const trackingNumber = row.trackingNumber;
-        const requester = row.nameOfPersonnel || row.clientFullName || "N/A";
-        const docs = row.requestedDocuments ? row.requestedDocuments.split(",").map(d => d.trim()) : [];
-        const docName = docs[4] || docs[0] || "N/A";
-      
-        const followUpMsg = `TRACKER #: ${trackingNumber}\nREQUESTER: ${requester}\n\nRequested Document: ${docName}`;
+    const originalHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `<span class="animate-spin fas fa-spinner"></span>`;
 
-       fetch(`${API_URL}?action=sendFollowup&trackingNumber=${encodeURIComponent(trackingNumber)}&id=${encodeURIComponent(clickId)}&message=${encodeURIComponent(followUpMsg)}`)
-        .then(() => {
-            
-            btn.innerHTML = `<span class="fas fa-check text-green-600"></span>`;
-            setTimeout(() => {
-              btn.disabled = false;
-              btn.innerHTML = originalHtml;
-            }, 2000);
-          })
+    const trackingNumber = row.trackingNumber;
+    const requester = row.nameOfPersonnel || row.clientFullName || "N/A";
+    const docs = row.requestedDocuments ? row.requestedDocuments.split(",").map(d => d.trim()) : [];
+    const docName = docs[4] || docs[0] || "N/A";
+    const followUpMsg = `TRACKER #: ${trackingNumber}\nREQUESTER: ${requester}\n\nRequested Document: ${docName}`;
+    const clickId = Date.now().toString();
+
+    fetch(`${API_URL}?action=sendFollowup&trackingNumber=${encodeURIComponent(trackingNumber)}&id=${encodeURIComponent(clickId)}&message=${encodeURIComponent(followUpMsg)}`)
+      .then(res => res.json())
+      .then(() => {
+        
+        localStorage.setItem("lastSentFollowupId", clickId); // Prevents sender from seeing their own modal
+        
+        btn.innerHTML = `<span class="fas fa-check text-green-600"></span>`;
+        
+        document.getElementById('toastMessage').textContent = "Success: Follow-up request transmitted.";
+        document.getElementById('pendingToast').classList.remove('hidden');
+        
+        setTimeout(() => document.getElementById('pendingToast').classList.add('hidden'), 3000);
+
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.innerHTML = originalHtml;
+        }, 2000);
+      })
       .catch(err => {
         console.error("Follow-up failed:", err);
         btn.disabled = false;
         btn.innerHTML = originalHtml;
-        alert("Failed to send follow-up. Please try again.");
+        alert("Transmission failed. Please check your connection.");
       });
-    }   
-  });
+  }
+});
 
   if (localStorage.getItem('adminLoggedIn') !== 'true') window.location.href = "/admin";
 });
