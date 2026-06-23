@@ -288,7 +288,6 @@ window.viewDetails = function(rowIndex) {
   });
 };
 
-
 window.viewSurvey = function(rowIndex) {
   const row = requestMap[rowIndex];
   const tbody = document.getElementById("surveyTableBody");
@@ -302,16 +301,16 @@ window.viewSurvey = function(rowIndex) {
     .then(d => {
       overlay.classList.add('hidden');
       if (!d.found) {
-        tbody.innerHTML = "<tr><td colspan='2' class='text-center py-4 text-slate-500 italic'>No survey submitted.</td></tr>";
+        tbody.innerHTML = "<tr><td colspan='2' class='text-center py-4 text-slate-500 italic'>No survey submitted for this request.</td></tr>";
       } else {
-        // Build the HTML including the Requested Document
         let html = `
           <tr class="bg-blue-50 border-b border-blue-100">
-            <th class="px-4 py-3 text-right text-xs text-blue-800 uppercase font-bold">Document Requested</th>
-            <td class="px-4 py-3 text-sm font-semibold text-blue-900">${d.requestedDoc}</td>
+            <th class="px-4 py-3 text-right text-xs text-blue-800 uppercase font-bold">Documents Requested</th>
+            <td class="px-4 py-3 text-sm font-semibold text-blue-900">${d.requestedDocsList}</td>
           </tr>
         `;
         
+        // Add the rest of the survey fields
         html += Object.entries(d.surveyData).map(([key, val]) => `
           <tr class="hover:bg-slate-50 border-b border-slate-50">
             <th class="px-4 py-2 text-right text-xs text-slate-400 uppercase">${key}</th>
@@ -321,6 +320,10 @@ window.viewSurvey = function(rowIndex) {
         
         tbody.innerHTML = html;
       }
+    })
+    .catch(err => {
+      overlay.classList.add('hidden');
+      console.error("Survey Fetch Error:", err);
     });
 };
 
