@@ -605,15 +605,30 @@ document.getElementById('chatToggleBtn').addEventListener('click', () => {
 document.getElementById('sendChatBtn').addEventListener('click', () => {
   const name = document.getElementById('chatName').value;
   const msg = document.getElementById('chatMsg').value;
+  const btn = document.getElementById('sendChatBtn');
+
   if (!name || !msg) return alert("Please enter name and message.");
+
+  const originalHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<span class="animate-spin fas fa-spinner"></span> Sending...`;
 
   fetch(`${API_URL}?action=saveChatMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ action: 'saveChatMessage', name: name, message: msg })
-  }).then(() => {
+  })
+  .then(() => {
     document.getElementById('chatMsg').value = "";
     loadMessages();
+  })
+  .catch(err => {
+    console.error("Chat error:", err);
+    alert("Failed to send message.");
+  })
+  .finally(() => {
+    btn.disabled = false;
+    btn.innerHTML = originalHtml;
   });
 });
 
