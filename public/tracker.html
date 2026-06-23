@@ -246,19 +246,23 @@
   </div>
 
 
-  <button id="chatToggleBtn" class="fixed bottom-4 left-4 z-[9999] bg-[#1d3557] text-white p-4 rounded-full shadow-lg hover:bg-slate-900 cursor-pointer">
+ <button id="chatToggleBtn" class="fixed bottom-4 left-4 z-[9999] bg-[#1d3557] text-white p-4 rounded-full shadow-lg hover:bg-slate-900 cursor-pointer relative">
     <i class="fas fa-comments text-xl"></i>
+    <span id="chatBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full hidden">0</span>
   </button>
-  
-  <div id="chatModal" class="fixed bottom-20 left-4 w-80 bg-white rounded-2xl shadow-2xl hidden z-[9999] border border-slate-200 overflow-hidden">
-    <div class="bg-slate-50 p-4 border-b font-bold text-slate-800">Team Chat</div>
-    <div id="chatBox" class="h-64 overflow-y-auto p-4 space-y-3 bg-slate-50 text-sm"></div>
-    <div class="p-4 border-t space-y-2">
-      <input type="text" id="chatName" placeholder="Your Name" class="w-full border rounded-lg p-2 text-xs">
-      <textarea id="chatMsg" placeholder="Type a message..." class="w-full border rounded-lg p-2 text-xs"></textarea>
-      <button id="sendChatBtn" class="w-full bg-[#1d3557] text-white py-2 rounded-lg text-xs font-bold cursor-pointer">SEND</button>
-    </div>
+    
+  <div id="chatModal" class="fixed bottom-20 left-4 w-80 bg-white rounded-2xl shadow-2xl hidden z-[9999] border border-slate-200 overflow-hidden flex flex-col">
+  <div class="bg-slate-800 text-white p-4 text-sm font-bold flex justify-between">
+    <span>Team Chat</span>
+    <i class="fas fa-circle text-[8px] text-green-400 animate-pulse"></i>
   </div>
+  <div id="chatBox" class="h-64 overflow-y-auto p-4 bg-slate-50"></div>
+  <div class="p-3 border-t bg-white space-y-2">
+    <input type="text" id="chatName" placeholder="Name" class="w-full border-none bg-slate-100 rounded-lg p-2 text-xs focus:ring-0">
+    <textarea id="chatMsg" maxlength="75" placeholder="Message (max 75 chars)..." class="w-full border-none bg-slate-100 rounded-lg p-2 text-xs focus:ring-0 resize-none h-16"></textarea>
+    <button id="sendChatBtn" class="w-full bg-emerald-600 text-white py-2 rounded-lg text-xs font-bold hover:bg-emerald-700 cursor-pointer transition-colors">SEND</button>
+  </div>
+</div>
 
   <audio id="notificationSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
 
