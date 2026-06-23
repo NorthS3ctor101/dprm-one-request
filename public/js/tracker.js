@@ -62,6 +62,9 @@ function createRow(row) {
     </td>
     <td class="px-6 py-4 whitespace-nowrap text-center">
       <div class="inline-flex gap-1.5">
+        <button class="survey-btn text-amber-600 bg-amber-50 border border-amber-200 p-2 rounded-xl" data-index="${row.index}">
+          <span class="fas fa-poll"></span>
+        </button>
         <button class="view-btn text-cyan-600 bg-cyan-50 border border-cyan-200 p-2 rounded-xl" data-index="${row.index}">
           <span class="fas fa-eye"></span>
         </button>
