@@ -1,3 +1,5 @@
+const channel = new BroadcastChannel('new-request-channel');
+
 let allData = [];
 let requestMap = {};
 let currentPage = 1;
@@ -7,7 +9,6 @@ let filteredData = [];
 let selectedRowIndex = null;
 let unreadCount = 0;
 
-const channel = new BroadcastChannel('new-request-channel');
 channel.onmessage = (e) => { 
   if (!e.data) return;
 
@@ -41,8 +42,8 @@ function createRow(row) {
   tr.id = `row-${row.index}`;
 
   const currentStatus = row.status ? row.status.toString().toUpperCase().trim() : "";
+  const currentStatus = row.status ? row.status.toString().toUpperCase().trim() : "ON PROCESS";
   const isCompleted = (currentStatus === 'COMPLETED');
-  const isProcess = (currentStatus === 'ON PROCESS');
   
   let pillClass = isProcess ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-blue-50 text-blue-700 border-blue-200';
 
