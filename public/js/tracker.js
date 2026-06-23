@@ -374,15 +374,17 @@ window.generateReport = function() {
 window.fetchReportData = function() {
   const btn = document.getElementById("generateReportBtn");
   const yr = document.getElementById("reportYearInput").value;
-  const tbody = document.querySelector("#reportTable tbody");
+  const tbody = document.querySelector("#reportTable tbody");;
   
-  btn.disabled = true;
+  if (btn) {
+    btn.disabled = true;
+  }
   tbody.innerHTML = `<tr><td colspan="14" class="text-center text-slate-400 py-6">Compiling...</td></tr>`;
 
   fetch(`${API_URL}?action=getInchargeReportData&year=${yr}`)
     .then(res => res.json())
     .then(data => {
-      btn.disabled = false;
+      if (btn) btn.disabled = false;
       
       tbody.innerHTML = "";
       if (!data || data.length === 0) {
@@ -398,7 +400,7 @@ window.fetchReportData = function() {
       document.getElementById("reportYear").textContent = yr;
     })
     .catch(err => {
-      btn.disabled = false;
+      if (btn) btn.disabled = false;
       console.error(err);
     });
 };
