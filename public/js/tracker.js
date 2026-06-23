@@ -573,6 +573,8 @@ function triggerFollowupUI(msg) {
   const modal = document.getElementById('followupModal');
   const content = document.getElementById('followupContent');
   const modalBox = modal.querySelector('.animate-vibrate');
+
+  content.style.whiteSpace = "pre-line";
   
   content.textContent = (typeof msg === 'object') ? (msg.message || "") : msg;
   modal.classList.remove('hidden');
