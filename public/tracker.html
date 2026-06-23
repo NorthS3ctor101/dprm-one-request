@@ -247,16 +247,14 @@
 
 
  <button id="chatToggleBtn" class="fixed bottom-4 left-4 z-[9999] bg-[#1d3557] text-white p-4 rounded-full shadow-lg hover:bg-slate-900 cursor-pointer relative">
-    <i class="fas fa-comments text-xl"></i>
-    <span id="chatBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full hidden">0</span>
-  </button>
-    
-  <div id="chatModal" class="fixed bottom-20 left-4 w-80 bg-white rounded-2xl shadow-2xl hidden z-[9999] border border-slate-200 overflow-hidden flex flex-col">
-  
+  <i class="fas fa-comments text-xl"></i>
+  <span id="chatBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full hidden">0</span>
+</button>
+
+<div id="chatModal" class="fixed bottom-20 left-4 w-80 bg-white rounded-2xl shadow-2xl hidden z-[9999] border border-slate-200 overflow-hidden flex flex-col">
   <div class="bg-slate-800 text-white p-4 text-sm font-bold flex justify-between items-center">
     <span>DPRM Chat</span>
-    <button onclick="document.getElementById('chatModal').classList.add('hidden')" 
-            class="text-white hover:text-slate-300 cursor-pointer">
+    <button id="minimizeChatBtn" class="text-white hover:text-slate-300 cursor-pointer">
         <i class="fas fa-minus text-xs"></i>
     </button>
   </div>
@@ -269,7 +267,6 @@
       <button id="sendChatBtn" class="w-full bg-emerald-600 text-white py-2 rounded-lg text-xs font-bold hover:bg-emerald-700 cursor-pointer transition-colors">SEND</button>
     </div>
   </div>
-    
 </div>
 
   <audio id="notificationSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
