@@ -222,11 +222,10 @@ window.viewDetails = function(rowIndex) {
   if (!row) return;
 
   const formatUI = (isoDate) => {
-    if (!isoDate) return "-";
+    if (!isoDate || isoDate === "" || isoDate === "null" || isoDate === "undefined") return "-";
     const d = new Date(isoDate);
-    return isNaN(d.getTime()) ? "-" : d.toLocaleDateString();
-  };
-  
+    return isNaN(d.getTime()) ? "-" : d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+
   const overlay = document.getElementById("loadingOverlay");
   const tbody = document.getElementById("detailsTableBody");
 
