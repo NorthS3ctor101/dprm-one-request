@@ -119,7 +119,6 @@ function initializeData() {
 }
 
 function loadRequestedDocuments() {
-  // 1. Fetch the latest data from the server
   fetch(`${API_URL}?action=getRequestedDocuments`)
     .then(res => res.json())
     .then(data => {
@@ -153,10 +152,14 @@ function loadRequestedDocuments() {
 
       fetch(`${API_URL}?action=getLatestFollowup`)
         .then(res => res.json())
-        .then(followupMsg => {
-          if (followupMsg && followupMsg !== localStorage.getItem("lastFollowup")) {
-            triggerFollowupUI(followupMsg);
-            localStorage.setItem("lastFollowup", followupMsg);
+        .then(response => {
+          if (response && response.message) {
+            const lastMsgTimestamp = localStorage.getItem("lastFollowupTime");
+            
+            if (response.timestamp !== lastMsgTimestamp) {
+              triggerFollowupUI(response.message);
+              localStorage.setItem("lastFollowupTime", response.timestamp);
+            }
           }
         });
     })
@@ -559,14 +562,10 @@ function triggerFollowupUI(msg) {
   const modal = document.getElementById('followupModal');
   const content = document.getElementById('followupContent');
   
-  content.textContent = msg;
-  modal.classList.remove('hidden');
+  const textToDisplay = (typeof msg === 'object') ? (msg.message || msg.text) : msg;
   
-  // Play sound for extra attention
-  const sfx = document.getElementById("notificationSound");
-  if (sfx) {
-    sfx.play().catch(e => console.warn("Audio play blocked", e));
-  }
+  content.textContent = textToDisplay; 
+  modal.classList.remove('hidden');
 }
 
 function setViewHeight() {
