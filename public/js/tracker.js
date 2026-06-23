@@ -140,7 +140,6 @@ function loadRequestedDocuments() {
         showNotification(msg); 
         triggerSystemDesktopBubble(deltaCount); 
         
-        // Broadcast to other tabs on the SAME computer
         channel.postMessage({ type: "NEW_PENDING_REQUEST", message: msg });
 
         if (document.hidden) {
@@ -154,11 +153,14 @@ function loadRequestedDocuments() {
         .then(res => res.json())
         .then(response => {
           if (response && response.message) {
-            const lastMsgTimestamp = localStorage.getItem("lastFollowupTime");
-            
-            if (response.timestamp !== lastMsgTimestamp) {
+            const lastAckId = localStorage.getItem("lastAcknowledgedFollowupId");
+            const mySentId = localStorage.getItem("lastSentFollowupId"); // ID set when clicking Bell
+
+            if (response.timestamp !== lastAckId && response.timestamp !== mySentId) {
               triggerFollowupUI(response.message);
-              localStorage.setItem("lastFollowupTime", response.timestamp);
+              
+              // We store it here so it doesn't pop up again on refresh
+              localStorage.setItem("lastAcknowledgedFollowupId", response.timestamp);
             }
           }
         });
@@ -543,11 +545,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
       if (e.target.closest(".followup-btn")) {
-        const btn = e.target.closest(".followup-btn");
-        
+        const btn = e.target.closest(".followup-btn");  
         if (!confirm("Send follow-up notification for this request?")) return;
       
         const row = requestMap[btn.dataset.index];
+        
+        const clickId = Date.now().toString();
+        localStorage.setItem("lastSentFollowupId", clickId);
         
         const originalHtml = btn.innerHTML;
         btn.disabled = true;
@@ -560,9 +564,8 @@ document.addEventListener('DOMContentLoaded', () => {
       
         const followUpMsg = `TRACKER #: ${trackingNumber}\nREQUESTER: ${requester}\n\nRequested Document: ${docName}`;
 
-        fetch(`${API_URL}?action=sendFollowup&trackingNumber=${encodeURIComponent(trackingNumber)}&message=${encodeURIComponent(followUpMsg)}`)
-          .then(res => res.json())
-          .then(() => {
+        fetch(`${API_URL}?action=sendFollowup&trackingNumber=${row.trackingNumber}&message=...&id=${clickId}`)
+        .then(() => {
             
             btn.innerHTML = `<span class="fas fa-check text-green-600"></span>`;
             setTimeout(() => {
