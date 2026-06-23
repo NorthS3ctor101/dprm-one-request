@@ -119,6 +119,7 @@ function initializeData() {
 }
 
 function loadRequestedDocuments() {
+  // 1. Fetch the latest data from the server
   fetch(`${API_URL}?action=getRequestedDocuments`)
     .then(res => res.json())
     .then(data => {
@@ -126,15 +127,12 @@ function loadRequestedDocuments() {
       
       const sortedData = data.sort((a, b) => parseInt(b.index, 10) - parseInt(a.index, 10));
       
-      const currentProcessCount = sortedData.filter(r => {
-        const stat = r.status ? r.status.toUpperCase().trim() : "";
-        return stat === "ON PROCESS";
-      }).length;
-
-      if (allData.length !== sortedData.length || JSON.stringify(sortedData[0]) !== JSON.stringify(allData[0])) {
+      if (allData.length !== sortedData.length || (sortedData[0] && JSON.stringify(sortedData[0]) !== JSON.stringify(allData[0]))) {
         allData = sortedData; 
         filterTable(); 
       }
+      
+      const currentProcessCount = sortedData.filter(r => (r.status || "").toUpperCase().trim() === "ON PROCESS").length;
       
       if (previousPendingCount !== null && currentProcessCount > previousPendingCount) {
         const deltaCount = currentProcessCount - previousPendingCount;
@@ -143,6 +141,7 @@ function loadRequestedDocuments() {
         showNotification(msg); 
         triggerSystemDesktopBubble(deltaCount); 
         
+        // Broadcast to other tabs on the SAME computer
         channel.postMessage({ type: "NEW_PENDING_REQUEST", message: msg });
 
         if (document.hidden) {
@@ -150,8 +149,16 @@ function loadRequestedDocuments() {
           updateTabBadge();
         }
       }
-    
       previousPendingCount = currentProcessCount;
+
+      fetch(`${API_URL}?action=getLatestFollowup`)
+        .then(res => res.json())
+        .then(followupMsg => {
+          if (followupMsg && followupMsg !== localStorage.getItem("lastFollowup")) {
+            triggerFollowupUI(followupMsg);
+            localStorage.setItem("lastFollowup", followupMsg);
+          }
+        });
     })
     .catch(err => console.error("Error loading documents:", err));
 }
@@ -532,16 +539,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 1000); 
     }
 
-    if (e.target.closest(".followup-btn")) {
+      if (e.target.closest(".followup-btn")) {
         const btn = e.target.closest(".followup-btn");
         const row = requestMap[btn.dataset.index];
-        
         const docs = row.requestedDocuments.split(",").map(d => d.trim());
         const docName = docs[4] || docs[0];
-      
         const followUpMsg = `CLIENT FOLLOWUP FOR THIS REQUEST\nRequested Document: ${docName}`;
-        
-        channel.postMessage({ type: "CLIENT_FOLLOWUP", message: followUpMsg });
+      
+        fetch(`${API_URL}?action=sendFollowup&trackingNumber=${row.trackingNumber}&message=${encodeURIComponent(followUpMsg)}`)
+          .then(() => alert("Follow-up sent to all stations."));
       }
     
   });
