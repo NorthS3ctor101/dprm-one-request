@@ -638,8 +638,6 @@ function handleFollowup(index) {
     });
 }
 
-
-
 function loadMessages() {
   fetch(`${API_URL}?action=getChatMessages`)
     .then(res => res.json())
@@ -663,8 +661,20 @@ function loadMessages() {
         box.scrollTop = box.scrollHeight;
 
         if (!isChatOpen) {
-          badge.textContent = data.length;
-          badge.classList.remove('hidden');
+          const now = new Date().getTime();
+          const thirtyMinutesAgo = now - (30 * 60 * 1000);
+          
+          const recentMessages = data.filter(m => {
+            const messageTime = new Date(m.timestamp).getTime();
+            return messageTime > thirtyMinutesAgo;
+          });
+
+          if (recentMessages.length > 0) {
+            badge.textContent = recentMessages.length;
+            badge.classList.remove('hidden');
+          } else {
+            badge.classList.add('hidden');
+          }
         }
       }
     })
