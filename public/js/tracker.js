@@ -303,7 +303,6 @@ window.viewSurvey = function(rowIndex) {
     if (!d.found) {
       tbody.innerHTML = "<tr><td colspan='2' class='text-center py-4 text-slate-500 italic'>No survey submitted.</td></tr>";
     } else {
-      // Safely get the document list
       const docList = d.requestedDocsList || "Not specified";
       
       let html = `
