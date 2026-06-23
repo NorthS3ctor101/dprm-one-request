@@ -288,6 +288,33 @@ window.viewDetails = function(rowIndex) {
   });
 };
 
+
+window.viewSurvey = function(rowIndex) {
+  const row = requestMap[rowIndex];
+  const tbody = document.getElementById("surveyTableBody");
+  const overlay = document.getElementById("loadingOverlay");
+  
+  overlay.classList.remove('hidden');
+  openModal('surveyModal');
+  tbody.innerHTML = "<tr><td colspan='2' class='text-center py-4'>Loading...</td></tr>";
+
+  fetch(`${API_URL}?action=getSurveyByTracking&trackingNumber=${encodeURIComponent(row.trackingNumber)}`)
+    .then(res => res.json())
+    .then(d => {
+      overlay.classList.add('hidden');
+      if (!d.found) {
+        tbody.innerHTML = "<tr><td colspan='2' class='text-center py-4 text-slate-500 italic'>No survey submitted for this request.</td></tr>";
+      } else {
+        tbody.innerHTML = Object.entries(d.surveyData).map(([key, val]) => `
+          <tr class="hover:bg-slate-50">
+            <th class="px-4 py-2 text-right text-xs text-slate-400 uppercase">${key}</th>
+            <td class="px-4 py-2 text-sm text-slate-700">${val || '-'}</td>
+          </tr>
+        `).join("");
+      }
+    });
+};
+
 window.markAsReleased = function(rowIndex) {
   const row = requestMap[rowIndex];
   if (!row) return;
@@ -449,6 +476,11 @@ document.addEventListener('DOMContentLoaded', () => {
   addListener("rowsPerPage", "change", function() { rowsPerPage = parseInt(this.value, 10); currentPage = 1; filterTable(); });
 
   document.getElementById("requestsTable")?.addEventListener("click", (e) => {
+    const surveyBtn = e.target.closest(".survey-btn");
+      if (surveyBtn) {
+        viewSurvey(surveyBtn.dataset.index);
+      }
+      
     const viewBtn = e.target.closest(".view-btn");
     const relBtn = e.target.closest(".release-btn");
     
