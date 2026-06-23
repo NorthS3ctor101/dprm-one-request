@@ -593,7 +593,14 @@ function handleFollowup(index) {
 
 document.getElementById('chatToggleBtn').addEventListener('click', () => {
   const modal = document.getElementById('chatModal');
+  const badge = document.getElementById('chatBadge');
+  
   modal.classList.remove('hidden');
+  isChatOpen = true;
+  
+  badge.classList.add('hidden');
+  chatUnreadCount = 0;
+  
   loadMessages();
 });
 
@@ -613,11 +620,11 @@ document.getElementById('minimizeChatBtn').addEventListener('click', () => {
 });
 
 document.getElementById('sendChatBtn').addEventListener('click', () => {
-  const name = document.getElementById('chatName').value;
-  const msg = document.getElementById('chatMsg').value;
+  const nameInput = document.getElementById('chatName');
+  const msgInput = document.getElementById('chatMsg');
   const btn = document.getElementById('sendChatBtn');
 
-  if (!name || !msg) return alert("Please enter name and message.");
+  if (!nameInput.value || !msgInput.value) return alert("Please enter name and message.");
 
   const originalHtml = btn.innerHTML;
   btn.disabled = true;
@@ -626,10 +633,15 @@ document.getElementById('sendChatBtn').addEventListener('click', () => {
   fetch(`${API_URL}?action=saveChatMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action: 'saveChatMessage', name: name, message: msg })
+    body: JSON.stringify({ 
+        action: 'saveChatMessage', 
+        name: nameInput.value, 
+        message: msgInput.value 
+    })
   })
+  .then(res => res.json())
   .then(() => {
-    document.getElementById('chatMsg').value = "";
+    msgInput.value = "";
     loadMessages();
   })
   .catch(err => {
@@ -648,28 +660,29 @@ function loadMessages() {
     .then(data => {
       const box = document.getElementById('chatBox');
       const badge = document.getElementById('chatBadge');
-      
-      box.innerHTML = data.map(m => {
-        const time = new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        return `
-          <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-100 mb-2">
-            <div class="flex justify-between items-center mb-1">
-              <span class="font-bold text-[10px] text-blue-600">${m.name}</span>
-              <span class="text-[9px] text-slate-400">${time}</span>
-            </div>
-            <div class="text-xs text-slate-700 break-words">${m.message}</div>
-          </div>
-        `;
-      }).join("");
 
-      if (!isChatOpen) {
-        chatUnreadCount = data.length;
-        badge.textContent = chatUnreadCount;
-        badge.classList.remove('hidden');
+      if (Array.isArray(data)) {
+        box.innerHTML = data.map(m => {
+          const time = new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          return `
+            <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-100 mb-2">
+              <div class="flex justify-between items-center mb-1">
+                <span class="font-bold text-[10px] text-blue-600">${m.name}</span>
+                <span class="text-[9px] text-slate-400">${time}</span>
+              </div>
+              <div class="text-xs text-slate-700 break-words">${m.message}</div>
+            </div>
+          `;
+        }).join("");
+        box.scrollTop = box.scrollHeight;
+
+        if (!isChatOpen) {
+          badge.textContent = data.length;
+          badge.classList.remove('hidden');
+        }
       }
-      
-      box.scrollTop = box.scrollHeight;
-    });
+    })
+    .catch(err => console.error("Load messages failed", err));
 }
 
 setInterval(loadMessages, 15000);
