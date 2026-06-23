@@ -410,6 +410,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById("prevPageBtn").addEventListener("click", previousPage);
   document.getElementById("nextPageBtn").addEventListener("click", nextPage);
   
+  document.getElementById("generateReportBtn").addEventListener("click", fetchReportData);
   document.getElementById("preparedBySubmitBtn").addEventListener("click", submitPreparedBy);
 
   document.getElementById("searchInput").addEventListener("input", filterTable);
