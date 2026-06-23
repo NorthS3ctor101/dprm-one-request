@@ -9,14 +9,18 @@ let unreadCount = 0;
 
 const channel = new BroadcastChannel('new-request-channel');
 channel.onmessage = (e) => { 
-  if (e.data && e.data.type === "NEW_PENDING_REQUEST") {
+  if (!e.data) return;
+
+  if (e.data.type === "NEW_PENDING_REQUEST") {
     showNotification(e.data.message); 
-    
-    if (document.hidden) {
-      unreadCount++;
-      updateTabBadge();
-    }
-  } 
+  } else if (e.data.type === "CLIENT_FOLLOWUP") {
+    triggerFollowupUI(e.data.message);
+  }
+  
+  if (document.hidden) {
+    unreadCount++;
+    updateTabBadge();
+  }
 };
 
 function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
@@ -62,6 +66,9 @@ function createRow(row) {
     </td>
     <td class="px-6 py-4 whitespace-nowrap text-center">
       <div class="inline-flex gap-1.5">
+        <button class="followup-btn text-purple-600 bg-purple-50 border border-purple-200 p-2 rounded-xl" data-index="${row.index}">
+          <span class="fas fa-bell"></span>
+        </button>
         <button class="survey-btn text-amber-600 bg-amber-50 border border-amber-200 p-2 rounded-xl" data-index="${row.index}">
           <span class="fas fa-poll"></span>
         </button>
@@ -493,7 +500,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (surveyBtn) {
         viewSurvey(surveyBtn.dataset.index);
       }
-      
+    
     const viewBtn = e.target.closest(".view-btn");
     const relBtn = e.target.closest(".release-btn");
     
@@ -513,10 +520,37 @@ document.addEventListener('DOMContentLoaded', () => {
         relBtn.innerHTML = originalContent;
       }, 1000); 
     }
+
+    if (e.target.closest(".followup-btn")) {
+        const btn = e.target.closest(".followup-btn");
+        const row = requestMap[btn.dataset.index];
+        
+        const docs = row.requestedDocuments.split(",").map(d => d.trim());
+        const docName = docs[4] || docs[0];
+      
+        const followUpMsg = `CLIENT FOLLOWUP FOR THIS REQUEST\nRequested Document: ${docName}`;
+        
+        channel.postMessage({ type: "CLIENT_FOLLOWUP", message: followUpMsg });
+      }
+    
   });
 
   if (localStorage.getItem('adminLoggedIn') !== 'true') window.location.href = "/admin";
 });
+
+function triggerFollowupUI(msg) {
+  const modal = document.getElementById('followupModal');
+  const content = document.getElementById('followupContent');
+  
+  content.textContent = msg;
+  modal.classList.remove('hidden');
+  
+  // Play sound for extra attention
+  const sfx = document.getElementById("notificationSound");
+  if (sfx) {
+    sfx.play().catch(e => console.warn("Audio play blocked", e));
+  }
+}
 
 function setViewHeight() {
   let vh = window.innerHeight * 0.01;
