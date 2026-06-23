@@ -296,7 +296,12 @@ fetch(`${API_URL}?action=getRegions`)
     const formData = Object.fromEntries(new FormData(this));
     formData.trackingNumber = activeTrackingCode || "NEW_SUBMISSION_SURVEY";
 
-    fetch(`${API_URL}?action=saveSurveyResponse`, { method: 'POST', body: JSON.stringify(formData) })
+    fetch(`${API_URL}?action=saveSurveyResponse`, { 
+      method: 'POST', 
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData) 
+    })
+      
       .then(res => res.json())
       .then(() => {
         if (survSubmitBtn) survSubmitBtn.disabled = false;
