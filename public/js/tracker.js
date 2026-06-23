@@ -223,17 +223,18 @@ window.viewDetails = function(rowIndex) {
 
   const formatUI = (val) => {
     if (!val || val === "-" || val === "" || val === "null" || val === "undefined") return "-";
+      
+      if (/^\d{4}-\d{2}-\d{2}$/.test(val)) {
+        const d = new Date(val + "T00:00:00"); // Force midnight
+        return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+      }
     
-    const d = new Date(val);
-    if (isNaN(d.getTime())) return val; // Return original if not a valid date
-
-    const valStr = val.toString();
-    if (valStr.includes(':')) {
-      return d.toLocaleDateString(undefined, { 
+      const d = new Date(val);
+      return isNaN(d.getTime()) ? val : d.toLocaleDateString(undefined, { 
         year: 'numeric', month: 'short', day: 'numeric', 
         hour: '2-digit', minute: '2-digit' 
       });
-    }
+    };
     
     return d.toLocaleDateString(undefined, { 
       year: 'numeric', month: 'short', day: 'numeric' 
