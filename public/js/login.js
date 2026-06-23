@@ -15,7 +15,6 @@ function login() {
   loginBtn.innerHTML = `<div class="animate-spin inline-block rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2 align-middle"></div>Logging in...`;
   errorMessage.classList.add('hidden');
 
-  // Perform secure fetch request
   fetch(`${apiUrl}?action=verifySecurityCode`, {
     method: 'POST',
     headers: {
@@ -29,7 +28,6 @@ function login() {
   .then(res => res.json())
   .then(response => {
     if (response && response.success === true) {
-      // Success: Redirect to dashboard
       localStorage.setItem('adminLoggedIn', 'true');
       window.location.href = "/admin/dashboard";
     } else {
@@ -39,11 +37,9 @@ function login() {
   .catch((err) => {
     console.error("Login Error:", err);
     
-    // Reset button state
     loginBtn.disabled = false;
     loginBtn.innerHTML = originalText;
     
-    // Show error message
     errorMessage.classList.remove('hidden');
   });
 }
