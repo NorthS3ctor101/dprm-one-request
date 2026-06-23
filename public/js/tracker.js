@@ -32,7 +32,6 @@ function setupModalClosers() {
 }
 
 function createRow(row) {
-
   const tr = document.createElement("tr");
   tr.className = "hover:bg-slate-50/70 transition-colors border-b border-slate-100";
   tr.id = `row-${row.index}`;
@@ -47,53 +46,32 @@ function createRow(row) {
   }
 
   let rawDate = row.dateAndTime || row.timestamp || row.dateRequested || row.date || row.dateTime || "";
-
-  if (!rawDate) {
-    const keys = Object.keys(row);
-    const dateKey = keys.find(k => {
-      const lowerKey = k.toLowerCase();
-      return lowerKey.includes('date') || lowerKey.includes('time') || lowerKey.includes('stamp');
-    });
-    if (dateKey) rawDate = row[dateKey];
-  }
-
-  let displayTime = "-";
-  if (rawDate) {
-    const parsedDate = new Date(rawDate);
-    if (!isNaN(parsedDate.getTime())) {
-      displayTime = parsedDate.toLocaleString();
-    } else {
-      displayTime = rawDate.toString().trim() || "-";
-    }
-  }
+  let displayTime = rawDate ? new Date(rawDate).toLocaleString() : "-";
 
   tr.innerHTML = `
     <td class="px-6 py-4 font-bold text-slate-900">${row.trackingNumber || '-'}</td>
     <td class="px-6 py-4 whitespace-nowrap text-xs text-slate-400">${displayTime}</td>
     <td class="px-6 py-4 font-semibold text-slate-800">${row.nameOfPersonnel || row.clientFullName || '-'}</td>
     <td class="px-6 py-4 text-slate-500">${row.region || '-'}</td>
-    <td class="px-6 py-4 max-w-xs truncate text-slate-600" title="${row.requestedDocuments || row.requestedDocument || ''}">${row.requestedDocuments || row.requestedDocument || '-'}</td>
+    <td class="px-6 py-4 max-w-xs truncate text-slate-600">${row.requestedDocuments || row.requestedDocument || '-'}</td>
     <td class="px-6 py-4 text-slate-500">${row.purpose || '-'}</td>
     <td class="px-6 py-4 font-medium text-slate-700">${row.processingTime || '-'}</td>
     <td class="px-6 py-4 whitespace-nowrap">
-      <span class="inline-block px-3 py-1 text-xs font-bold rounded-full border tracking-wide uppercase ${pillClass}">
-        ${row.status || 'PENDING'}
-      </span>
+      <span class="inline-block px-3 py-1 text-xs font-bold rounded-full border ${pillClass}">${row.status || 'PENDING'}</span>
     </td>
-    tr.innerHTML = `
-        <td class="px-6 py-4 whitespace-nowrap text-center">
-          <div class="inline-flex gap-1.5">
-            <button class="view-btn text-cyan-600 bg-cyan-50 border p-2 rounded-xl" data-index="${row.index}">
-              <span class="fas fa-eye"></span>
-            </button>
-            <button class="release-btn text-green-600 bg-green-50 border p-2 rounded-xl" data-index="${row.index}" ${(currentStatus !== "ON PROCESS" && currentStatus !== "PENDING") ? 'disabled' : ''}>
-              <span class="fas fa-check"></span>
-            </button>
-          </div>
-        </td>
-      `;
-      return tr;
-    }
+    <td class="px-6 py-4 whitespace-nowrap text-center">
+      <div class="inline-flex gap-1.5">
+        <button class="view-btn text-cyan-600 bg-cyan-50 border p-2 rounded-xl" data-index="${row.index}">
+          <span class="fas fa-eye"></span>
+        </button>
+        <button class="release-btn text-green-600 bg-green-50 border p-2 rounded-xl" data-index="${row.index}" ${(currentStatus !== "ON PROCESS" && currentStatus !== "PENDING") ? 'disabled' : ''}>
+          <span class="fas fa-check"></span>
+        </button>
+      </div>
+    </td>
+  `;
+  return tr;
+}
 
 function initializeData() {
   fetch(`${API_URL}?action=getRequestedDocuments`)
@@ -363,7 +341,6 @@ window.filterTable = function() {
 
     const matchesSearch = (currentTrackingNum.includes(i) || currentPersonnelName.includes(i));
     
-    // Fallback checks to match alternate structural naming variables safely
     let matchesStatus = false;
     if (filter === "ALL") {
       matchesStatus = true;
