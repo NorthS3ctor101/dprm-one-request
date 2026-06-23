@@ -1,5 +1,4 @@
 const sessionStartTime = new Date().getTime();
-
 const channel = new BroadcastChannel('new-request-channel');
 
 channel.onmessage = (e) => { 
@@ -219,6 +218,18 @@ function updateTabBadge() {
     document.title = "DPRM-OneRequest Tracker";
   }
 }
+
+window.addEventListener('pagehide', (event) => {
+  if (event.persisted === false) {
+    localStorage.removeItem('adminLoggedIn');
+  }
+});
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') {
+    localStorage.setItem('lastActive', new Date().getTime());
+  }
+});
 
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) {
@@ -503,6 +514,26 @@ document.addEventListener('DOMContentLoaded', () => {
   setupModalClosers();
   initializeData();
 
+  const lastActive = localStorage.getItem('lastActive');
+  const now = new Date().getTime();
+
+  if (lastActive && (now - lastActive > 30 * 60 * 1000)) { 
+    localStorage.removeItem('adminLoggedIn');
+    window.location.href = "/admin";
+    return;
+  }
+
+  localStorage.setItem('lastActive', now);
+
+  setInterval(() => {
+    const lastActive = localStorage.getItem('lastActive');
+    const now = new Date().getTime();
+    if (lastActive && (now - lastActive > 30 * 60 * 1000)) {
+        localStorage.removeItem('adminLoggedIn');
+        window.location.href = "/admin";
+    }
+  }, 60000)
+  
   const addListener = (id, event, handler) => {
     const el = document.getElementById(id);
     if (el) el.addEventListener(event, handler);
