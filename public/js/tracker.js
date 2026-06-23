@@ -346,20 +346,12 @@ window.filterTable = function() {
   const filter = document.getElementById("statusFilter").value.toUpperCase().trim();
   
   filteredData = allData.filter(r => {
-    const currentTrackingNum = r.trackingNumber ? r.trackingNumber.toString().toLowerCase() : "";
-    const currentPersonnelName = (r.nameOfPersonnel || r.clientFullName || "").toString().toLowerCase();
-    const currentStatus = r.status ? r.status.toString().toUpperCase().trim() : "";
-
-    const matchesSearch = (currentTrackingNum.includes(i) || currentPersonnelName.includes(i));
+    const status = r.status ? r.status.toUpperCase().trim() : "";
+    const matchesSearch = (r.trackingNumber?.toLowerCase().includes(i) || 
+                          r.nameOfPersonnel?.toLowerCase().includes(i));
     
-    let matchesStatus = false;
-    if (filter === "ALL") {
-      matchesStatus = true;
-    } else if (filter === "ON PROCESS") {
-      matchesStatus = (currentStatus === "ON PROCESS" || currentStatus === "PENDING");
-    } else {
-      matchesStatus = (currentStatus === filter);
-    }
+    // If filter is ALL, return everything. Otherwise, match the specific status.
+    const matchesStatus = (filter === "ALL" || status === filter);
     
     return matchesSearch && matchesStatus;
   });
