@@ -111,7 +111,7 @@ function initializeData() {
       
       filterTable();
       checkNotificationPermissionState();
-      setInterval(, 10000);
+      setInterval(loadRequestedDocuments, 10000);
     }).catch(err => {
       console.error("Database connection error:", err);
       document.getElementById("requestBody").innerHTML = "<tr><td colspan='10' class='text-center text-red-500 py-6 font-medium'>Error loading request streams. Please check API connection.</td></tr>";
