@@ -346,7 +346,7 @@ window.submitPreparedBy = function() {
 window.previousPage = function() { if (currentPage > 1) { currentPage--; renderPage(); } };
 window.nextPage = function() { if (currentPage * rowsPerPage < filteredData.length) { currentPage++; renderPage(); } };
 
-window.filterTable = function() {
+function filterTable() {
   const i = document.getElementById("searchInput").value.toLowerCase();
   const filter = document.getElementById("statusFilter").value.toUpperCase().trim();
   
@@ -361,7 +361,7 @@ window.filterTable = function() {
   });
   
   renderPage();
-};
+}
 
 window.generateReport = function() {
   const yr = new Date().getFullYear();
