@@ -220,6 +220,12 @@ function renderPage() {
 window.viewDetails = function(rowIndex) {
   const row = requestMap[rowIndex];
   if (!row) return;
+
+  const formatUI = (isoDate) => {
+    if (!isoDate) return "-";
+    const d = new Date(isoDate);
+    return isNaN(d.getTime()) ? "-" : d.toLocaleDateString();
+  };
   
   const overlay = document.getElementById("loadingOverlay");
   const tbody = document.getElementById("detailsTableBody");
@@ -236,7 +242,7 @@ window.viewDetails = function(rowIndex) {
         .then(d => {
           const targetRows = [
             ["Reference Number", d.trackingNumber, "font-bold text-emerald-600 text-base"],
-            ["Date of Requested", d.dateAndTime || d.timestamp || d.dateRequested ? new Date(d.dateAndTime || d.timestamp || d.dateRequested).toLocaleString() : ""],
+            ["Date of Requested", formatUI(d.dateAndTime)],
             ["Type of Client", d.typeOfClient],
             ["Requested Documents", d.requestedDocuments || d.requestedDocument, "font-semibold text-slate-900"],
             ["Number of Copies", d.copies || d.numberCopies],
@@ -244,7 +250,7 @@ window.viewDetails = function(rowIndex) {
             ["Client Name", d.nameOfPersonnel || d.clientFullName, "font-medium text-slate-900"],
             ["Region Assignment", d.region],
             ["Unit/Office", d.jailUnitOffice],
-            ["Date of First Appointment", d.dateFirstAppointment ? new Date(d.dateFirstAppointment).toLocaleDateString() : ""],
+            ["Date of First Appointment", formatUI(d.dateFirstAppointment)],
             ["Date of Separation", d.dateRetirementSeparation ? new Date(d.dateRetirementSeparation).toLocaleDateString() : ""],
             ["Client Notes", d.notes, "italic text-slate-400"],
             ["Processor", d.preparedBy],
