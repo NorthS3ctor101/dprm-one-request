@@ -355,7 +355,6 @@ window.submitPreparedBy = function() {
 window.previousPage = function() { if (currentPage > 1) { currentPage--; renderPage(); } };
 window.nextPage = function() { if (currentPage * rowsPerPage < filteredData.length) { currentPage++; renderPage(); } };
 
-// 🌟 FIX 3: Fully normalized filters that handle ALL statuses and structural text anomalies perfectly
 window.filterTable = function() {
   const i = document.getElementById("searchInput").value.toLowerCase();
   const filter = document.getElementById("statusFilter").value.toUpperCase().trim();
@@ -421,23 +420,28 @@ window.logout = function() {
 
 document.addEventListener('DOMContentLoaded', () => {
   setupModalClosers();
+  initializeData();
+
+  document.getElementById("reportBtn").addEventListener("click", generateReport);
+  document.getElementById("logoutBtn").addEventListener("click", logout);
+  document.getElementById("enableNotifBtn").addEventListener("click", requestDesktopNotificationPermission);
   
-  document.getElementById("statusFilter").addEventListener("change", () => {
-    currentPage = 1;
-    filterTable();
+  document.getElementById("prevPageBtn").addEventListener("click", previousPage);
+  document.getElementById("nextPageBtn").addEventListener("click", nextPage);
+  
+  document.getElementById("preparedBySubmitBtn").addEventListener("click", submitPreparedBy);
+
+  document.getElementById("requestsTable").addEventListener("click", (e) => {
+    const viewBtn = e.target.closest(".view-btn");
+    const relBtn = e.target.closest(".release-btn");
+    if (viewBtn) viewDetails(viewBtn.dataset.index);
+    if (relBtn) markAsReleased(relBtn.dataset.index);
   });
 
-  document.getElementById("rowsPerPage").addEventListener("change", function() {
-    rowsPerPage = parseInt(this.value, 10);
-    currentPage = 1;
-    filterTable();
-  });
+  document.getElementById("statusFilter").addEventListener("change", () => { currentPage = 1; filterTable(); });
+  document.getElementById("rowsPerPage").addEventListener("change", function() { rowsPerPage = parseInt(this.value, 10); currentPage = 1; filterTable(); });
   
-  if (localStorage.getItem('adminLoggedIn') !== 'true') { 
-    window.location.href = "/admin"; 
-  } else {
-    initializeData(); 
-  }
+  if (localStorage.getItem('adminLoggedIn') !== 'true') window.location.href = "/admin";
 });
 
 function setViewHeight() {
