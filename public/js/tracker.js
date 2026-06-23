@@ -521,6 +521,55 @@ document.addEventListener('DOMContentLoaded', () => {
   addListener("statusFilter", "change", () => { currentPage = 1; filterTable(); });
   addListener("rowsPerPage", "change", function() { rowsPerPage = parseInt(this.value, 10); currentPage = 1; filterTable(); });
 
+addListener('chatToggleBtn', 'click', () => {
+    const modal = document.getElementById('chatModal');
+    const badge = document.getElementById('chatBadge');
+    modal.classList.remove('hidden');
+    isChatOpen = true;
+    badge.classList.add('hidden');
+    chatUnreadCount = 0;
+    loadMessages();
+  });
+
+  addListener('minimizeChatBtn', 'click', () => {
+    const container = document.getElementById('chatContentContainer');
+    const icon = document.querySelector('#minimizeChatBtn i');
+    container.classList.toggle('hidden');
+    icon.classList.toggle('fa-minus');
+    icon.classList.toggle('fa-plus');
+  });
+
+  addListener('sendChatBtn', 'click', () => {
+    const nameInput = document.getElementById('chatName');
+    const msgInput = document.getElementById('chatMsg');
+    const btn = document.getElementById('sendChatBtn');
+
+    if (!nameInput.value || !msgInput.value) return alert("Please enter name and message.");
+
+    const originalHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `<span class="animate-spin fas fa-spinner"></span> Sending...`;
+
+    fetch(`${API_URL}?action=saveChatMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'saveChatMessage', name: nameInput.value, message: msgInput.value })
+    })
+    .then(res => res.json())
+    .then(() => {
+      msgInput.value = "";
+      loadMessages();
+    })
+    .catch(err => {
+      console.error("Chat Error:", err);
+      alert("Failed to send message.");
+    })
+    .finally(() => {
+      btn.disabled = false;
+      btn.innerHTML = originalHtml;
+    });
+  });
+  
 document.getElementById("requestsTable")?.addEventListener("click", (e) => {
   const target = e.target.closest("button");
   if (!target) return;
@@ -547,6 +596,9 @@ document.getElementById("requestsTable")?.addEventListener("click", (e) => {
     }, 1000);
   }
 });
+  if (localStorage.getItem('adminLoggedIn') !== 'true') window.location.href = "/admin";
+});
+
 
 function handleFollowup(index) {
   const row = requestMap[index];
@@ -587,63 +639,7 @@ function handleFollowup(index) {
     });
 }
 
-  if (localStorage.getItem('adminLoggedIn') !== 'true') window.location.href = "/admin";
-});
 
-
-document.getElementById('chatToggleBtn').addEventListener('click', () => {
-  const modal = document.getElementById('chatModal');
-  const badge = document.getElementById('chatBadge');
-  
-  modal.classList.remove('hidden');
-  isChatOpen = true;
-  
-  badge.classList.add('hidden');
-  chatUnreadCount = 0;
-  
-  loadMessages();
-});
-
-document.getElementById('minimizeChatBtn').addEventListener('click', () => {
-  const container = document.getElementById('chatContentContainer');
-  const icon = document.querySelector('#minimizeChatBtn i');
-  
-  container.classList.toggle('hidden');
-  
-  if (container.classList.contains('hidden')) {
-    icon.classList.remove('fa-minus');
-    icon.classList.add('fa-plus');
-  } else {
-    icon.classList.remove('fa-plus');
-    icon.classList.add('fa-minus');
-  }
-});
-
-document.getElementById('sendChatBtn').addEventListener('click', () => {
-  const name = document.getElementById('chatName').value;
-  const msg = document.getElementById('chatMsg').value;
-  
-  if (!name || !msg) return alert("Please enter name and message.");
-
-  console.log("Sending to:", `${API_URL}?action=saveChatMessage`, { name, message: msg });
-
-  fetch(`${API_URL}?action=saveChatMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ 
-        action: 'saveChatMessage', 
-        name: name, 
-        message: msg 
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    console.log("Response from server:", data);
-    document.getElementById('chatMsg').value = "";
-    loadMessages();
-  })
-  .catch(err => console.error("Chat Error:", err));
-});
 
 function loadMessages() {
   fetch(`${API_URL}?action=getChatMessages`)
