@@ -20,7 +20,7 @@
         <i class="fas fa-info-circle text-base text-blue-600"></i>
         <span>Enable desktop permissions to receive background audio alerts and real-time push tracking updates for client requests.</span>
       </div>
-      <button id="enableNotifBtn" class="bg-blue-700 hover:bg-blue-800 text-white font-semibold text-xs px-4 py-2 rounded-xl transition-colors whitespace-nowrap cursor-pointer" onclick="requestDesktopNotificationPermission()">
+      <button id="enableNotifBtn" class="bg-blue-700 hover:bg-blue-800 text-white font-semibold text-xs px-4 py-2 rounded-xl transition-colors whitespace-nowrap cursor-pointer">
         Enable Notifications
       </button>
     </div>
@@ -28,10 +28,10 @@
     <header class="bg-gradient-to-r from-[#0f1c3f] to-slate-800 text-white px-6 py-4 rounded-xl shadow-md flex flex-col md:flex-row justify-between items-center gap-4">
       <img src="https://i.imgur.com/IM6VlDm.png" alt="Logo" class="w-52 h-auto" />
       <div class="flex gap-2">
-        <button id="reportBtn" class="flex items-center gap-2 bg-white/10 hover:bg-white/15 text-white font-medium text-sm px-4 py-2.5 rounded-xl border border-white/10 transition-colors cursor-pointer" onclick="generateReport()">
+        <button id="reportBtn" class="flex items-center gap-2 bg-white/10 hover:bg-white/15 text-white font-medium text-sm px-4 py-2.5 rounded-xl border border-white/10 transition-colors cursor-pointer">
           <i class="fas fa-chart-line text-xs"></i> Report
         </button>
-        <button id="logoutBtn" class="flex items-center gap-2 bg-red-600/90 hover:bg-red-600 text-white font-medium text-sm px-4 py-2.5 rounded-xl border border-red-700/10 transition-colors cursor-pointer" onclick="logout()">
+        <button id="logoutBtn" class="flex items-center gap-2 bg-red-600/90 hover:bg-red-600 text-white font-medium text-sm px-4 py-2.5 rounded-xl border border-red-700/10 transition-colors cursor-pointer">
           <i class="fas fa-sign-out-alt text-xs"></i> Logout
         </button>
       </div>
@@ -153,7 +153,7 @@
         </div>
         <div class="flex justify-between items-center px-6 py-4 bg-slate-50 border-t border-slate-100">
           <small id="preparedByError" class="text-red-600 hidden font-semibold text-xs">Please allocate a workflow handler.</small>
-          <button id="preparedBySubmitBtn" type="button" class="bg-[#1d3557] hover:bg-[#0f1c3f] text-white font-semibold text-sm px-5 py-2 rounded-xl transition-colors ml-auto cursor-pointer" onclick="submitPreparedBy()">Confirm Completion</button>
+          <button id="preparedBySubmitBtn" type="button" class="bg-[#1d3557] hover:bg-[#0f1c3f] text-white font-semibold text-sm px-5 py-2 rounded-xl transition-colors ml-auto cursor-pointer">Confirm Completion</button>
         </div>
       </div>
     </div>
@@ -171,7 +171,7 @@
           <div class="bg-slate-50 border border-slate-200/60 p-3 rounded-xl flex items-center gap-3">
             <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-0">Select Target Year:</label>
             <input type="number" id="reportYearInput" class="border border-slate-300 rounded-lg px-3 py-1 text-sm bg-white focus:outline-none w-28 font-semibold text-slate-800" />
-            <button class="bg-[#1d3557] text-white font-semibold text-xs px-4 py-2 rounded-lg hover:bg-[#0f1c3f] cursor-pointer transition-colors" onclick="fetchReportData()">Generate</button>
+            <button class="bg-[#1d3557] text-white font-semibold text-xs px-4 py-2 rounded-lg hover:bg-[#0f1c3f] cursor-pointer transition-colors">Generate</button>
           </div>
           <div class="overflow-x-auto border border-slate-200 rounded-xl bg-white shadow-inner">
             <table class="min-w-full border-collapse text-center text-xs text-slate-600 align-middle" id="reportTable">
