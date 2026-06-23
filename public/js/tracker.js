@@ -64,7 +64,7 @@ function createRow(row) {
         <button class="view-btn text-cyan-600 bg-cyan-50 border p-2 rounded-xl" data-index="${row.index}">
           <span class="fas fa-eye"></span>
         </button>
-        <button class="release-btn text-green-600 bg-green-50 border p-2 rounded-xl" data-index="${row.index}" ${(currentStatus !== "ON PROCESS" && currentStatus !== "PENDING") ? 'disabled' : ''}>
+        <button class="release-btn text-green-600 bg-green-50 border p-2 rounded-xl" data-index="${row.index}" ${(currentStatus !== "ON PROCESS") ? 'disabled' : ''}>
           <span class="fas fa-check"></span>
         </button>
       </div>
