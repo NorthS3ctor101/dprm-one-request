@@ -548,11 +548,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const docs = row.requestedDocuments.split(",").map(d => d.trim());
         const docName = docs[4] || docs[0];
         const followUpMsg = `CLIENT FOLLOWUP FOR THIS REQUEST\nRequested Document: ${docName}`;
-      
-        fetch(`${API_URL}?action=sendFollowup&trackingNumber=${row.trackingNumber}&message=${encodeURIComponent(followUpMsg)}`)
-          .then(() => alert("Follow-up sent to all stations."));
-      }
-    
+
+      fetch(`${API_URL}?action=sendFollowup&trackingNumber=${encodeURIComponent(row.trackingNumber)}&message=${encodeURIComponent(followUpMsg)}`)
+        .then(res => res.json())
+        .then(data => console.log("Server responded:", data))
+        .catch(err => console.error("Fetch failed:", err));
+      }    
   });
 
   if (localStorage.getItem('adminLoggedIn') !== 'true') window.location.href = "/admin";
