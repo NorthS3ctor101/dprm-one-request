@@ -1,3 +1,13 @@
+function showNotification(msg) {
+  const toast = document.getElementById('toastMessage');
+  if (toast) {
+    toast.textContent = msg;
+    document.getElementById('pendingToast').classList.remove('hidden');
+    setTimeout(() => document.getElementById('pendingToast').classList.add('hidden'), 3000);
+  } else {
+    alert(msg);
+  }
+}
 
 function login() {
   const apiUrl = window.API_URL || "/api/proxy"; 
