@@ -545,14 +545,14 @@ document.addEventListener('DOMContentLoaded', () => {
       if (e.target.closest(".followup-btn")) {
         const btn = e.target.closest(".followup-btn");
         const row = requestMap[btn.dataset.index];
-        const docs = row.requestedDocuments.split(",").map(d => d.trim());
-        const docName = docs[4] || docs[0];
-        const followUpMsg = `CLIENT FOLLOWUP FOR THIS REQUEST\nRequested Document: ${docName}`;
+        const trackingNumber = row.trackingNumber;
+        const requester = row.nameOfPersonnel || row.clientFullName || "N/A";
+        const docs = row.requestedDocuments ? row.requestedDocuments.split(",").map(d => d.trim()) : [];
+        const docName = docs[4] || docs[0] || "N/A";
+        const followUpMsg = `TRACKER #: ${trackingNumber}\nREQUESTER: ${requester}\n\nRequested Document: ${docName}`;
 
-      fetch(`${API_URL}?action=sendFollowup&trackingNumber=${encodeURIComponent(row.trackingNumber)}&message=${encodeURIComponent(followUpMsg)}`)
-        .then(res => res.json())
-        .then(data => console.log("Server responded:", data))
-        .catch(err => console.error("Fetch failed:", err));
+      fetch(`${API_URL}?action=sendFollowup&trackingNumber=${encodeURIComponent(trackingNumber)}&message=${encodeURIComponent(followUpMsg)}`)
+      .then(() => alert("Follow-up sent."));
       }    
   });
 
@@ -562,11 +562,18 @@ document.addEventListener('DOMContentLoaded', () => {
 function triggerFollowupUI(msg) {
   const modal = document.getElementById('followupModal');
   const content = document.getElementById('followupContent');
+
+  const textToDisplay = (typeof msg === 'object') ? (msg.message || "") : msg;
+
+  content.style.whiteSpace = "pre-line";
+  content.textContent = textToDisplay;
   
-  const textToDisplay = (typeof msg === 'object') ? (msg.message || msg.text) : msg;
-  
-  content.textContent = textToDisplay; 
   modal.classList.remove('hidden');
+  
+  const sfx = document.getElementById("notificationSound");
+  if (sfx) {
+    sfx.play().catch(e => console.warn("Audio play blocked", e));
+  }
 }
 
 function setViewHeight() {
