@@ -614,6 +614,8 @@ function loadMessages() {
   fetch(`${API_URL}?action=getChatMessages`)
     .then(res => res.json())
     .then(data => {
+      if (!Array.isArray(data)) return; 
+      
       const box = document.getElementById('chatBox');
       box.innerHTML = data.map(m => `
         <div class="bg-white p-2 rounded-lg shadow-sm border">
@@ -622,7 +624,8 @@ function loadMessages() {
         </div>
       `).join("");
       box.scrollTop = box.scrollHeight;
-    });
+    })
+    .catch(err => console.error("Chat load error:", err));
 }
 
 setInterval(loadMessages, 15000);
