@@ -96,7 +96,7 @@ function createRow(row) {
 }
 
 function initializeData() {
-  fetch(`${API_URL}?action=`)
+  fetch(`${API_URL}?action=getRequestedDocuments`) 
     .then(res => res.json())
     .then(data => {
       if (!Array.isArray(data)) {
