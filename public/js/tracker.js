@@ -96,15 +96,23 @@ function createRow(row) {
 }
 
 function initializeData() {
-  fetch(`${API_URL}?action=getRequestedDocuments`) 
+  fetch(`${API_URL}?action=getRequestedDocuments`)
     .then(res => res.json())
     .then(data => {
-      if (!Array.isArray(data)) {
-        console.error("Expected array, received:", data);
-        return;
-      }
+
+    if (data.error) {
+            console.error("API Error:", data.error);
+            document.getElementById("requestBody").innerHTML = `<tr><td colspan='9' class='text-center text-red-500 py-6'>Server Error: ${data.error}</td></tr>`;
+            return;
+          }
+      
+    f (!Array.isArray(data)) {
+            console.error("Expected array, received:", data);
+            return;
+          }
       
       allData = data.sort((a, b) => parseInt(b.index, 10) - parseInt(a.index, 10));
+
       
       previousPendingCount = allData.filter(r => {
         const stat = r.status ? r.status.toUpperCase().trim() : "";
