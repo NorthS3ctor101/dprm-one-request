@@ -222,6 +222,7 @@ function updateTabBadge() {
 window.addEventListener('pagehide', (event) => {
   if (event.persisted === false) {
     localStorage.removeItem('adminLoggedIn');
+    localStorage.removeItem('lastActive');
   }
 });
 
@@ -517,27 +518,40 @@ document.addEventListener('DOMContentLoaded', () => {
   const lastActive = localStorage.getItem('lastActive');
   const now = new Date().getTime();
 
-  if (lastActive && (now - lastActive > 30 * 60 * 1000)) { 
-    localStorage.removeItem('adminLoggedIn');
-    window.location.href = "/admin";
-    return;
+  if (localStorage.getItem('adminLoggedIn') === 'true') {
+      const lastActive = localStorage.getItem('lastActive');
+      const now = new Date().getTime();
+      
+      if (lastActive && (now - lastActive > 30 * 60 * 1000)) { 
+        localStorage.removeItem('adminLoggedIn');
+        window.location.href = "/admin";
+        return;
+      }
+      localStorage.setItem('lastActive', now);
+  } else {
+      // If not logged in, force admin
+      window.location.href = "/admin";
+      return;
   }
 
-  localStorage.setItem('lastActive', now);
-
   setInterval(() => {
-    const lastActive = localStorage.getItem('lastActive');
+    const lastActive = parseInt(localStorage.getItem('lastActive') || "0");
     const now = new Date().getTime();
     if (lastActive && (now - lastActive > 30 * 60 * 1000)) {
         localStorage.removeItem('adminLoggedIn');
         window.location.href = "/admin";
-    }
-  }, 60000)
-  
+      }
+  }, 60000);
+
+  document.getElementById("requestsTable")?.addEventListener("click", () => {
+    localStorage.setItem('lastActive', new Date().getTime());
+  });
+    
   const addListener = (id, event, handler) => {
     const el = document.getElementById(id);
     if (el) el.addEventListener(event, handler);
   };
+  
 
   addListener("reportBtn", "click", generateReport);
   addListener("logoutBtn", "click", logout);
