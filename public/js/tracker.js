@@ -106,7 +106,7 @@ function initializeData() {
             return;
           }
       
-    f (!Array.isArray(data)) {
+    if (!Array.isArray(data)) {
             console.error("Expected array, received:", data);
             return;
           }
