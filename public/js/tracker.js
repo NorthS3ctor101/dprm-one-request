@@ -97,8 +97,10 @@ function createRow(row) {
 
 function initializeData() {
   fetch(`${API_URL}?action=getRequestedDocuments`)
-    .then(res => res.json())
-    .then(data => {
+  .then(res => res.json())
+  .then(data => {
+    console.log("RAW DATA FROM GOOGLE:", data);
+    if (data.length === 0) console.warn("The API returned an empty array. Check your TRACKING sheet.");
 
     if (data.error) {
             console.error("API Error:", data.error);
