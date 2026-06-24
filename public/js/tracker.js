@@ -220,10 +220,20 @@ function updateTabBadge() {
 }
 
 window.addEventListener('pagehide', (event) => {
-  if (event.persisted === false) {
-    localStorage.removeItem('adminLoggedIn');
-    localStorage.removeItem('lastActive');
-  }
+    if (event.persisted === false) {
+        if (!sessionStorage.getItem('isRefreshing')) {
+            localStorage.removeItem('adminLoggedIn');
+            localStorage.removeItem('lastActive');
+        }
+    }
+});
+
+window.addEventListener('beforeunload', () => {
+    sessionStorage.setItem('isRefreshing', 'true');
+});
+
+window.addEventListener('load', () => {
+    sessionStorage.removeItem('isRefreshing');
 });
 
 document.addEventListener('visibilitychange', () => {
@@ -519,7 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const now = new Date().getTime();
 
   if (localStorage.getItem('adminLoggedIn') === 'true') {
-      const lastActive = localStorage.getItem('lastActive');
+      const lastActive = parseInt(localStorage.getItem('lastActive') || "0");
       const now = new Date().getTime();
       
       if (lastActive && (now - lastActive > 30 * 60 * 1000)) { 
@@ -529,8 +539,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       localStorage.setItem('lastActive', now);
   } else {
-      // If not logged in, force admin
-      window.location.href = "/admin";
+      if(window.location.pathname !== "/admin") {
+          window.location.href = "/admin";
+      }
       return;
   }
 
