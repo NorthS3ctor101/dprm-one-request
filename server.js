@@ -29,46 +29,46 @@ app.use('/api/proxy', async (req, res) => {
 
     const fetchOptions = {
       method: req.method,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      redirect: 'follow' 
     };
     
     if (req.method !== 'GET' && req.body) {
-      const bodyData = { ...req.body };
-      if (req.query.action) {
-        bodyData.action = req.query.action;
-      }
-      fetchOptions.body = JSON.stringify(bodyData);
+      fetchOptions.body = JSON.stringify(req.body);
     }
     
     const response = await fetch(targetUrl.toString(), fetchOptions);
+
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      const errorText = await response.text();
+      console.error("Upstream returned non-JSON:", errorText);
+      return res.status(502).json({ success: false, error: "Upstream server returned invalid format." });
+    }
+
     const data = await response.json();
-    return res.status(200).json(data);
+    return res.status(response.status).json(data);
+
   } catch (error) {
+    console.error("Proxy execution error:", error);
     return res.status(500).json({ success: false, error: error.message });
   }
 });
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'login.html'));
-});
-
-app.get('/admin/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'tracker.html'));
-});
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'public', 'login.html')));
+app.get('/admin/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'public', 'tracker.html')));
 
 app.use((req, res) => {
-  res.status(404).send('<h1>404 Asset Resource Matrix Not Found</h1>');
+  res.status(404).send('<h1>404 Resource Not Found</h1>');
 });
 
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
-    console.log(`\nDPRM-OneRequest Environment Active`);
-    console.log(`Client Workspace:   http://localhost:${PORT}`);
-    console.log(`Admin Gateway:      http://localhost:${PORT}/admin\n`);
+    console.log(`DPRM-OneRequest Active on http://localhost:${PORT}`);
   });
 }
 
