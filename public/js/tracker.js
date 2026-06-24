@@ -96,7 +96,7 @@ function createRow(row) {
 }
 
 function initializeData() {
-  fetch(`${API_URL}?action=getRequestedDocuments`)
+  fetch(`${API_URL}?action=`)
     .then(res => res.json())
     .then(data => {
       if (!Array.isArray(data)) {
@@ -122,7 +122,10 @@ function initializeData() {
 
 function loadRequestedDocuments() {
   fetch(`${API_URL}?action=getRequestedDocuments`)
-    .then(res => res.json())
+    .then(res => {
+      if (!res.ok) throw new Error("Server responded with " + res.status);
+      return res.json();
+    })
     .then(data => {
       if (!Array.isArray(data)) return;
       
