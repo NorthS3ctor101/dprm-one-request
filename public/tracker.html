@@ -26,7 +26,8 @@
   <script src="/js/config.js" defer></script>
   <script src="/js/tracker.js" defer></script>
 </head>
-<body class="bg-slate-100 font-sans text-slate-700 antialiased h-screen w-screen flex flex-col overflow-hidden">
+  
+<body class="bg-slate-100 font-sans text-slate-700 antialiased min-h-screen flex flex-col">
 
   <div class="w-full flex-none p-4 pb-0 space-y-4">
     <div id="permissionBanner" class="hidden bg-blue-50 border border-blue-200 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-center gap-3 shadow-sm mx-auto">
@@ -75,9 +76,9 @@
     </div>
   </div>
 
-  <main class="flex-grow w-full p-4 pt-2 pb-0 overflow-hidden flex flex-col min-h-0">
+  <main class="flex-grow w-full p-4 pt-2 pb-0 flex flex-col">
     <main-panel class="block bg-white rounded-t-xl border border-b-0 border-slate-200/80 p-4 pb-2">
-      <div class="overflow-x-auto overflow-y-auto flex-grow max-h-[calc(100vh-200px)] -mx-4 border border-slate-100 rounded-xl bg-slate-50/20">
+      <div class="overflow-x-auto flex-grow max-h-[600px] -mx-4 border border-slate-100 rounded-xl bg-slate-50/20">
         <table class="min-w-full divide-y divide-slate-200" id="requestsTable">
           <thead class="bg-slate-50/95 backdrop-blur-xs sticky top-0 z-10 shadow-xs">
             <tr class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-200">
