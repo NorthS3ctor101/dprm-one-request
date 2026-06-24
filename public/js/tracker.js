@@ -356,27 +356,31 @@ window.viewDetails = function(rowIndex) {
 
 window.viewSurvey = function(rowIndex) {
   const row = requestMap[rowIndex];
+  if (!row) return;
+
   const tbody = document.getElementById("surveyTableBody");
   const overlay = document.getElementById("loadingOverlay");
   
-  overlay.classList.remove('hidden');
+  tbody.innerHTML = ""; 
+  overlay.classList.remove('hidden'); 
   openModal('surveyModal');
 
   fetch(`${API_URL}?action=getSurveyByTracking&trackingNumber=${encodeURIComponent(row.trackingNumber)}`)
     .then(res => res.json())
-     .then(d => {
-    overlay.classList.add('hidden');
-    if (!d.found) {
-      tbody.innerHTML = "<tr><td colspan='2' class='text-center py-4 text-slate-500 italic'>No survey submitted.</td></tr>";
-    } else {
-      const docList = d.requestedDocsList || "Not specified";
+    .then(d => {
+      overlay.classList.add('hidden');
       
-      let html = `
-        <tr class="bg-blue-50 border-b border-blue-100">
-          <th class="px-4 py-3 text-right text-xs text-blue-800 uppercase font-bold">Documents Requested</th>
-          <td class="px-4 py-3 text-sm font-semibold text-blue-900">${docList}</td>
-        </tr>
-      `;
+      if (!d.found) {
+        tbody.innerHTML = "<tr><td colspan='2' class='text-center py-4 text-slate-500 italic'>No survey submitted.</td></tr>";
+      } else {
+        const docList = d.requestedDocsList || "Not specified";
+        
+        let html = `
+          <tr class="bg-blue-50 border-b border-blue-100">
+            <th class="px-4 py-3 text-right text-xs text-blue-800 uppercase font-bold">Documents Requested</th>
+            <td class="px-4 py-3 text-sm font-semibold text-blue-900">${docList}</td>
+          </tr>
+        `;
         
         html += Object.entries(d.surveyData).map(([key, val]) => `
           <tr class="hover:bg-slate-50 border-b border-slate-50">
@@ -391,6 +395,7 @@ window.viewSurvey = function(rowIndex) {
     .catch(err => {
       overlay.classList.add('hidden');
       console.error("Survey Fetch Error:", err);
+      tbody.innerHTML = "<tr><td colspan='2' class='text-center py-4 text-red-500'>Error loading survey results.</td></tr>";
     });
 };
 
