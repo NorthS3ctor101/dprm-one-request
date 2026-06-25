@@ -232,29 +232,6 @@ function updateTabBadge() {
   }
 }
 
-window.addEventListener('pagehide', (event) => {
-    if (event.persisted === false) {
-        if (!sessionStorage.getItem('isRefreshing')) {
-            localStorage.removeItem('adminLoggedIn');
-            localStorage.removeItem('lastActive');
-        }
-    }
-});
-
-window.addEventListener('beforeunload', () => {
-    sessionStorage.setItem('isRefreshing', 'true');
-});
-
-window.addEventListener('load', () => {
-    sessionStorage.removeItem('isRefreshing');
-});
-
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'hidden') {
-    localStorage.setItem('lastActive', new Date().getTime());
-  }
-});
-
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) {
     updateTabBadge();
@@ -546,31 +523,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const lastActive = localStorage.getItem('lastActive');
   const now = new Date().getTime();
 
-  if (localStorage.getItem('adminLoggedIn') === 'true') {
-      const lastActive = parseInt(localStorage.getItem('lastActive') || "0");
-      const now = new Date().getTime();
-      
-      if (lastActive && (now - lastActive > 30 * 60 * 1000)) { 
-        localStorage.removeItem('adminLoggedIn');
+  if (localStorage.getItem('adminLoggedIn') !== 'true') {
         window.location.href = "/admin";
         return;
-      }
-      localStorage.setItem('lastActive', now);
-  } else {
-      if(window.location.pathname !== "/admin") {
-          window.location.href = "/admin";
-      }
-      return;
-  }
-
-  setInterval(() => {
-    const lastActive = parseInt(localStorage.getItem('lastActive') || "0");
-    const now = new Date().getTime();
-    if (lastActive && (now - lastActive > 30 * 60 * 1000)) {
-        localStorage.removeItem('adminLoggedIn');
-        window.location.href = "/admin";
-      }
-  }, 60000);
+    }
 
   document.getElementById("requestsTable")?.addEventListener("click", () => {
     localStorage.setItem('lastActive', new Date().getTime());
@@ -581,7 +537,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (el) el.addEventListener(event, handler);
   };
   
-
   addListener("reportBtn", "click", generateReport);
   addListener("logoutBtn", "click", logout);
   addListener("enableNotifBtn", "click", requestDesktopNotificationPermission);
