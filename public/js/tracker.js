@@ -2,7 +2,6 @@ const sessionStartTime = new Date().getTime();
 const channel = new BroadcastChannel('new-request-channel');
 
 channel.onmessage = (e) => { 
-  console.log("Channel message received:", e.data);
   if (!e.data) return;
 
   if (e.data.type === "NEW_PENDING_REQUEST") {
@@ -99,7 +98,6 @@ function initializeData() {
   fetch(`${API_URL}?action=getRequestedDocuments`)
   .then(res => res.json())
   .then(data => {
-    console.log("RAW DATA FROM GOOGLE:", data);
     if (data.length === 0) console.warn("The API returned an empty array. Check your TRACKING sheet.");
 
     if (data.error) {
@@ -196,7 +194,6 @@ window.requestDesktopNotificationPermission = function() {
   if ("Notification" in window) {
     Notification.requestPermission().then(permission => {
       if (permission === "granted") {
-        console.log("Desktop notification pipeline authorized.");
       }
       checkNotificationPermissionState();
     });
