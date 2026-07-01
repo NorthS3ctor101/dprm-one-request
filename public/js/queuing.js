@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         queueBody.innerHTML = `
           <tr class="h-full flex items-center justify-center">
             <td class="text-center text-red-600 text-xl font-bold">
-              <i class="fas fa-exclamation-triangle mr-2"></i> Connection Lost. Retrying link...
+              <i class="fas fa-exclamation-triangle mr-2"></i> Network Disconnected...
             </td>
           </tr>`;
       });
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
       queueBody.innerHTML = `
         <tr class="h-full flex items-center justify-center flex-grow">
           <td class="text-center text-slate-400 text-xl italic font-medium">
-            No document requests recorded on the system database today.
+            No document requests were received today.
           </td>
         </tr>`;
       return;
