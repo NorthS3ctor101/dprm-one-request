@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         queueBody.innerHTML = `
           <tr class="h-full flex items-center justify-center">
             <td class="text-center text-red-600 text-xl font-bold">
-              <i class="fas fa-exclamation-triangle mr-2"></i> Network Disconnected...
+              <i class="fas fa-exclamation-triangle mr-2"></i> Network connection lost.
             </td>
           </tr>`;
       });
