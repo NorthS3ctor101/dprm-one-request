@@ -16,29 +16,37 @@ document.addEventListener('DOMContentLoaded', () => {
         queueBody.innerHTML = `
           <tr class="h-full flex items-center justify-center">
             <td class="text-center text-red-600 text-xl font-bold">
-              <i class="fas fa-exclamation-triangle mr-2"></i> Network connection lost.
+              <i class="fas fa-exclamation-triangle mr-2"></i> Connection Lost. Retrying link...
             </td>
           </tr>`;
       });
   }
 
   function renderQueue(requests) {
-    const todayStr = new Date().toISOString().split('T')[0];
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+    const currentDate = now.getDate();
 
     let processedList = requests.filter(item => {
       if (!item.dateAndTime) return false;
       
-      const itemDateStr = new Date(item.dateAndTime).toISOString().split('T')[0];
+      const itemDate = new Date(item.dateAndTime);
+      
+      const isToday = itemDate.getFullYear() === currentYear &&
+                      itemDate.getMonth() === currentMonth &&
+                      itemDate.getDate() === currentDate;
+                      
       const currentStatus = (item.status || "").toUpperCase().trim();
       
-      return itemDateStr === todayStr && (currentStatus === "ON PROCESS" || currentStatus === "COMPLETED" || currentStatus === "READY FOR RELEASE");
+      return isToday && (currentStatus === "ON PROCESS" || currentStatus === "COMPLETED" || currentStatus === "READY FOR RELEASE");
     });
 
     if (processedList.length === 0) {
       queueBody.innerHTML = `
         <tr class="h-full flex items-center justify-center flex-grow">
           <td class="text-center text-slate-400 text-xl italic font-medium">
-            No document requests were received today.
+            No active document requests recorded on the system database today.
           </td>
         </tr>`;
       return;
@@ -89,9 +97,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('liveClock').textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     document.getElementById('liveDate').textContent = now.toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   }
-
+  
   updateClock();
   setInterval(updateClock, 1000);
   fetchQueueData();
-  setInterval(fetchQueueData, 8000);
+  setInterval(fetchQueueData, 8000); // Poll tracking system source every 8 seconds
 });
